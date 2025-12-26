@@ -10,10 +10,9 @@
   <style>
     /* Fix for fixed header */
     .page-content {
-      padding-top: 140px; /* same height as header */
+      padding-top: 140px;
     }
 
-    /* Optional: repeat the header styles if needed */
     header {
       position: fixed;
       top: 0;
@@ -45,11 +44,31 @@
     header nav ul li a:hover {
       text-decoration: underline;
     }
+
+    /* ===== Classic Sandbox Video Hover Effect ===== */
+    .video img {
+      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      cursor: pointer;
+    }
+
+    .video img:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 14px rgba(0,0,0,0.35);
+    }
+
+    .video p {
+      margin-top: 10px;
+      font-weight: bold;
+      color: white;
+    }
   </style>
 </head>
+
 <body class="sqishdummy-page">
 
-  <!-- Updated SSS Header from redsantababy.html -->
   <header>
     <h1>Shutter Shade Studios</h1>
     <nav>
@@ -64,9 +83,7 @@
     </nav>
   </header>
 
-  <!-- Page Content to prevent overlap -->
   <div class="page-content">
-
     <main>
       <section id="profile">
         <div class="profile-container">
@@ -74,7 +91,7 @@
           <div class="profile-info">
             <h2>Sqishdummy</h2>
             <p>
-              <a href="https://www.roblox.com/users/3634993819/profile" target="_blank">@Sqishdummy on Roblox</a> and also 
+              <a href="https://www.roblox.com/users/3634993819/profile" target="_blank">@Sqishdummy on Roblox</a> and also
               <a href="https://www.youtube.com/@Sqishdummy" target="_blank">@Sqishdummy on YouTube</a>
             </p>
             <p>I make games and videos, that's really about it. I occasionally write and make music.</p>
@@ -85,7 +102,6 @@
         </div>
       </section>
 
-      <!-- Video Projects Section -->
       <section id="video-projects">
         <h2>- Video Projects -</h2>
         <div class="videos">
@@ -95,6 +111,7 @@
               <p>DM64 Bloopers: The Stupid Road Trip</p>
             </a>
           </div>
+
           <div class="video">
             <a href="https://youtu.be/MiOZ7LtkQzQ?si=MF-9rBzCYGAA2YXR" target="_blank">
               <img src="../images/rob_meets_dm64_thumbnail.png" alt="Rob meets DM64 Thumbnail">
@@ -104,11 +121,10 @@
         </div>
       </section>
     </main>
-
-  </div> <!-- /.page-content -->
+  </div>
 
   <footer>
-    <p>Shutter Shade Studios - Footer </p>
+    <p>Shutter Shade Studios - Footer</p>
   </footer>
 
 </body>
