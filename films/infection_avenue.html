@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Infection Avenue - Shutter Shade Studios</title>
+<style>
+    /* ===== SSS Header & Footer ===== */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        background-color: #2a7f2a;
+        color: white;
+        text-align: center;
+        padding: 20px;
+        z-index: 1000;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+    header nav ul {
+        list-style: none;
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin: 10px 0 0 0;
+        padding: 0;
+    }
+    header nav ul li a {
+        color: white;
+        font-weight: bold;
+        text-decoration: none;
+    }
+    header nav ul li a:hover {
+        text-decoration: underline;
+    }
+    .site-footer {
+        background-color: #2a7f2a;
+        color: white;
+        text-align: center;
+        padding: 10px;
+        width: 100%;
+        margin-top: auto;
+    }
+
+    body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-color: #040B12;
+        position: relative;
+    }
+
+    /* ===== Page content styling ===== */
+    .page-content {
+        padding-top: 160px; /* space for fixed header */
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 20px;
+        flex-grow: 1;
+    }
+
+    .page-content img {
+        max-width: 90%;
+        height: auto;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.5);
+        z-index: 1;
+    }
+
+    /* ===== White flash styling ===== */
+    .white-flash {
+        position: absolute;
+        width: 50px;
+        height: 50px;
+        background-color: white;
+        opacity: 0;
+        z-index: 2000;
+        pointer-events: none;
+        border-radius: 5px;
+        transition: opacity 0.2s ease;
+    }
+
+    @media (max-width: 768px) {
+        .page-content {
+            gap: 10px;
+        }
+        .page-content img {
+            max-width: 95%;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- SSS Header -->
+<header>
+    <h1>Shutter Shade Studios</h1>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../members.html">Our Members</a></li>
+            <li><a href="../games.html">Games</a></li>
+            <li><a href="../films.html">Films & Shows</a></li>
+            <li><a href="../blog.html">Blog</a></li>
+            <li><a href="../contact.html">Where to Find Us</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Page content with two stacked screenshots -->
+<div class="page-content">
+    <img src="../images/infection_avenue1.png" alt="Infection Avenue Screenshot 1">
+    <img src="../images/infection_avenue2.png" alt="Infection Avenue Screenshot 2">
+</div>
+
+<!-- White flash element -->
+<div class="white-flash" id="whiteFlash"></div>
+
+<!-- SSS Footer -->
+<footer class="site-footer">
+    <p>Shutter Shade Studios - Footer</p>
+</footer>
+
+<script>
+    const flash = document.getElementById('whiteFlash');
+
+    function randomFlash() {
+        const positions = ['top: 10px; left: 10px;', 
+                           'top: 10px; right: 10px;', 
+                           'bottom: 10px; left: 10px;', 
+                           'bottom: 10px; right: 10px;'];
+        const randomPos = positions[Math.floor(Math.random() * positions.length)];
+        flash.style.cssText = randomPos + 'position: absolute; width:50px; height:50px; background-color:white; border-radius:5px; opacity:1; transition: opacity 0.2s ease;';
+        
+        setTimeout(() => {
+            flash.style.opacity = 0;
+        }, 200); // Flash visible for 0.2s
+    }
+
+    // Trigger flash every 20 seconds
+    setInterval(randomFlash, 20000);
+</script>
+
+</body>
+</html>

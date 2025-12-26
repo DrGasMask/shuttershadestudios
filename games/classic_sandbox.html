@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Classic Sandbox</title>
+  <link rel="stylesheet" href="../style.css">
+
+  <style>
+    /* Fix for fixed header */
+    .page-content {
+      padding-top: 140px; /* same height as header */
+    }
+
+    /* Updated SSS Header CSS */
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: #2a7f2a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      margin: 10px 0 0 0;
+      padding: 0;
+    }
+
+    header nav ul li a {
+      color: white;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    header nav ul li a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+
+<body class="classic-sandbox-page">
+
+  <!-- Updated SSS Header from redsantababy.html -->
+  <header>
+    <h1>Shutter Shade Studios</h1>
+    <nav>
+      <ul>
+        <li><a href="../index.html">Home</a></li>
+        <li><a href="../members.html">Our Members</a></li>
+        <li><a href="../games.html">Games</a></li>
+        <li><a href="../films.html">Films & Shows</a></li>
+        <li><a href="../blog.html">Blog</a></li>
+        <li><a href="../contact.html">Where to Find Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Page Content wrapper to prevent header overlap -->
+  <div class="page-content">
+
+    <!-- CLASSIC SANDBOX HEADER IMAGE -->
+    <section class="sandbox-header">
+      <img src="../images/classic_sandbox_logo.png"
+           alt="Classic Sandbox Logo"
+           class="sandbox-logo"
+           loading="eager">
+    </section>
+
+    <!-- MAIN CONTENT -->
+    <main>
+
+      <!-- TEXT + VIDEO SIDE BY SIDE -->
+      <section class="sandbox-content">
+
+        <!-- LEFT: TEXT -->
+        <div class="sandbox-info">
+          <p>
+            Classic Sandbox takes inspiration from Garry's Mod and obviously it has a classic look to it.
+            You can play around with the Magna Gun and Reality Rewriter along with some Roblox weapons!
+            Many items are taken from the tool box so if you're the rightful owner and would like your
+            items taken out PLEASE contact me
+          </p>
+
+          <a href="https://www.roblox.com/games/133429802296967/Classic-Sandbox"
+             target="_blank"
+             class="play-btn">
+            Play Here
+          </a>
+
+          <a href="https://classic-sandbox.fandom.com/wiki/Classic_Sandbox_Wiki"
+             target="_blank"
+             class="wiki-link">
+            Wiki
+          </a>
+        </div>
+
+        <!-- RIGHT: VIDEO THUMBNAIL -->
+        <div class="sandbox-video">
+          <h2>Classic Sandbox Ad</h2>
+
+          <a href="https://youtu.be/C1pxCWjpPg4?si=YfLRlRsdV_209Q05" target="_blank">
+            <img src="../images/classic_sandbox_video_thumbnail.png"
+                 alt="Classic Sandbox Ad"
+                 class="video-thumbnail">
+          </a>
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FUN FACTS SECTION -->
+    <section class="fun-facts">
+      <div class="fun-facts-container">
+
+        <!-- Left Column: Intro -->
+        <div class="fun-facts-intro">
+          <p>
+            Classic Sandbox is currently in <strong>Alpha</strong> as of September 3rd, 2025. 
+            Developed and maintained by <strong>Shutter Shade Studios</strong>, it continues 
+            to grow with updates and community contributions.
+          </p>
+        </div>
+
+        <!-- Right Column: Fun Facts -->
+        <div class="fun-facts-list">
+          <h2>
+            Fun Facts <span class="arrow">➤</span>
+          </h2>
+          <hr>
+          <ul>
+            <li>It used to be called Sqishdum's Mod up until the development of the Mcbloxys map, when it was changed to Classic Sandbox.
+.</li>
+            <li>Earlier on instead of using classic models or making my own, sqish (me) dragged shit straight from the toolbox meaning that maps consisted of higher quality models rather than blockier ones, but I did change all of them (I'm pretty sure)
+</li>
+          </ul>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- COMPATIBILITY & CHANGELOG SECTION -->
+    <section class="compatibility-changelog">
+      <div class="cc-container">
+
+        <!-- Left Column: Compatibility -->
+        <div class="cc-column compatibility">
+          <h2>
+            Compatibility <span class="chevron">^</span>
+          </h2>
+          <hr>
+          <ul>
+            <li>PC (Fully Supported)</li>
+            <li>Mobile/Tablet (<span class="unsupported">Limited Support</span>)</li>
+            <li>Console (<span class="unsupported">No Support</span>)</li>
+            <li>VR (<span class="unsupported">Are you crazy?</span>)</li>
+          </ul>
+        </div>
+
+        <!-- Right Column: Changelog -->
+        <div class="cc-column changelog">
+          <h2>
+            Changelog <span class="chevron">^</span>
+          </h2>
+          <hr>
+          <p>I genuinely have zero clue what to put here</p>
+        </div>
+
+      </div>
+
+      <!-- Extra Requirements Sub-Section -->
+      <div class="extra-requirements">
+        <h3>Extra Requirements:</h3>
+        <ul>
+          <li>Roblox account (RIP guests)</li>
+          <li>Internet connection</li>
+          <li>Coolness</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- FEATURE CTA SECTION -->
+    <section class="feature-cta">
+      <div class="cta-container">
+
+        <!-- CTA 1: Maps -->
+        <div class="cta-block">
+          <a href="../maps.html" class="cta-button">Maps</a>
+          <p class="cta-description">Check out and see what the maps look like!</p>
+        </div>
+
+        <!-- CTA 2: Characters -->
+        <div class="cta-block">
+          <a href="../characters.html" class="cta-button">Characters</a>
+          <p class="cta-description">Meet the different characters of Classic Sandbox!</p>
+        </div>
+
+        <!-- CTA 3: Tools -->
+        <div class="cta-block">
+          <a href="../tools.html" class="cta-button">Tools</a>
+          <p class="cta-description">Explore the various tools and gadgets available.</p>
+        </div>
+
+      </div>
+    </section>
+
+  </div> <!-- /.page-content -->
+
+  <footer>
+    <p>Shutter Shade Studios - Footer</p>
+  </footer>
+
+</body>
+</html>

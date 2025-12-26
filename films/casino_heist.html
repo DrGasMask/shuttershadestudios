@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casino Heist - Shutter Shade Studios</title>
+<style>
+/* ===== SSS Header ===== */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2a7f2a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+    font-family: Arial, sans-serif; /* header stays original font */
+}
+header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0 0 0;
+    padding: 0;
+}
+header nav ul li a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+}
+header nav ul li a:hover {
+    text-decoration: underline;
+}
+
+/* ===== SSS Footer ===== */
+footer {
+    background-color: #2a7f2a;
+    color: white;
+    text-align: center;
+    padding: 10px;
+    width: 100%;
+    font-family: Arial, sans-serif; /* footer stays original font */
+}
+
+/* ===== Body & Page Content ===== */
+body {
+    margin: 0;
+    background-color: #660000; /* Dark red background */
+    color: white;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.page-content {
+    padding-top: 160px; /* space for fixed header */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+}
+
+/* Logo at top */
+.casino-logo {
+    max-width: 600px;   /* made logo larger */
+    width: 90%;
+    height: auto;
+    display: block;
+    margin-top: 20px;
+    
+    border-radius: 10px;
+}
+
+/* Script Text Styling - Teko font */
+.script-text {
+    font-family: 'Teko', sans-serif; /* only this section uses Teko */
+    max-width: 1000px;
+    padding: 20px;
+    background-color: rgba(0,0,0,0.6); /* semi-transparent background */
+    border-radius: 10px;
+    line-height: 1.6;
+    font-size: 1.1em;
+    text-align: left;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .script-text {
+        padding: 15px;
+        font-size: 1em;
+    }
+    .casino-logo {
+        max-width: 90%;
+    }
+}
+</style>
+
+<!-- Google Fonts Teko -->
+<link href="https://fonts.googleapis.com/css2?family=Teko:wght@400;600&display=swap" rel="stylesheet">
+
+</head>
+<body>
+
+<!-- SSS Header -->
+<header>
+    <h1>Shutter Shade Studios</h1>
+    <nav>
+        <ul>
+            <li><a href="../index.html">Home</a></li>
+            <li><a href="../members.html">Our Members</a></li>
+            <li><a href="../games.html">Games</a></li>
+            <li><a href="../films.html">Films & Shows</a></li>
+            <li><a href="../blog.html">Blog</a></li>
+            <li><a href="../contact.html">Where to Find Us</a></li>
+        </ul>
+    </nav>
+</header>
+
+<!-- Page Content -->
+<div class="page-content">
+    <!-- Logo -->
+    <img src="../images/casino_heist_logo.png" alt="Casino Heist Logo" class="casino-logo">
+
+    <!-- Script Text -->
+    <div class="script-text">
+        After losing all their money gambling, Joseph convinces his crew to attempt a desperate casino heist. Robert is dropped off first and violently infiltrates the casino by killing a guard, disabling security cameras, and disguising himself as casino staff. He lets the rest of the crew Joseph, Tony, Stephen, and sniper Perry enter while pretending everything is normal.<br><br>
+
+        As the group blends in by gambling, tensions rise, especially with Stephen, whose temper threatens the plan. When Stephen impulsively shoots a man at a gambling table, the heist begins to unravel. Robert and Stephen nearly come to blows, revealing deep mistrust and cracks within the crew.<br><br>
+
+        Trying to regain control, Joseph hastily changes the plan, sending himself and Stephen to search for the vault while Robert and Tony stay behind to manage the chaos. The scene ends with Perry revealed as the outside sniper, watching over the casino as the situation grows increasingly unstable... thats all the script has rn lmao
+    </div>
+</div>
+
+<!-- SSS Footer -->
+<footer>
+    <p>Shutter Shade Studios - Footer</p>
+</footer>
+
+</body>
+</html>

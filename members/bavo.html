@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bavo3211 Profile & Shutter Shade Studios</title>
+    <style>
+        /* ===== SSS Header & Footer ===== */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2a7f2a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            z-index: 1000;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+
+        header nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 10px 0 0 0;
+            padding: 0;
+        }
+
+        header nav ul li a {
+            color: white;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        header nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        .site-footer {
+            background-color: #2a7f2a;
+            color: white;
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin-top: auto;
+        }
+
+        /* ===== Page Layout ===== */
+        :root {
+            --light-green: #97c271;
+            --dark-green: #375317;
+            --button-bg: #e0e0e0;
+            --text-color: black;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background-color: var(--light-green); 
+            color: var(--text-color);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .page-content {
+            padding-top: 160px;
+            flex-grow: 1;
+        }
+
+        .main-container, .page-wrapper {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content-wrapper {
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .left-placeholder {
+            width: 300px;
+            height: 400px;
+            background-color: #8ab761;
+            border: 1px solid var(--dark-green);
+        }
+
+        .profile-text {
+            flex-grow: 1;
+            line-height: 1.5;
+            margin-top: 1em;
+        }
+
+        h1, h2 {
+            margin: 0 0 1em 0;
+            font-size: 1.5em;
+            font-weight: bold;
+        }
+
+        p {
+            margin: 0 0 0.5em 0;
+        }
+
+        .separator {
+            border: none;
+            border-top: 1px dashed black;
+            margin: 1em 0;
+            width: 80%;
+        }
+
+        .section-separator {
+            background-color: var(--dark-green);
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+        }
+
+        .content-area {
+            flex-grow: 1;
+            padding: 40px;
+            display: flex;
+            justify-content: space-around;
+            gap: 40px;
+        }
+
+        .section {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 45%;
+            min-width: 300px;
+        }
+
+        .button-link {
+            display: block;
+            padding: 10px;
+            background-color: var(--button-bg);
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.1);
+            cursor: pointer;
+        }
+
+        /* ===== Classic Sandbox Video Styling ===== */
+        .sandbox-video {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        .sandbox-video h2 {
+            margin-bottom: 10px;
+        }
+
+        .sandbox-video img {
+            max-width: 100%;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .sandbox-video img:hover {
+            transform: scale(1.05);
+        }
+
+        .footer-bottom-content {
+            background-color: var(--dark-green);
+            color: white;
+            padding: 20px 40px;
+        }
+
+        .miniblog-header {
+            font-weight: bold;
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .disclaimer-icon {
+            font-size: 0.8em;
+            opacity: 0.7;
+            margin-top: 10px;
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .content-wrapper, .content-area {
+                flex-direction: column;
+                padding: 20px;
+            }
+            .left-placeholder {
+                width: 100%;
+                height: 200px;
+            }
+            .section {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- SSS Header -->
+    <header>
+        <h1>Shutter Shade Studios</h1>
+        <nav>
+            <ul>
+                <li><a href="../index.html">Home</a></li>
+                <li><a href="../members.html">Our Members</a></li>
+                <li><a href="../games.html">Games</a></li>
+                <li><a href="../films.html">Films & Shows</a></li>
+                <li><a href="../blog.html">Blog</a></li>
+                <li><a href="../contact.html">Where to Find Us</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="page-content">
+        <!-- TOP PROFILE SECTION (Bavo3211) -->
+        <div class="main-container">
+            <div class="content-wrapper">
+                <div class="left-placeholder" aria-label="Placeholder for profile image"></div>
+                <div class="profile-text">
+                    <p>Hello. I'm bavo3211.</p>
+                    <p>I do stuff.</p>
+                    <p>I guess.</p>
+
+                    <hr class="separator">
+
+                    <p>I make music and have helped work on the website a bit. I have had at least a small part in most of the studio's projects, although more-so in other fields than music.</p>
+                </div>
+            </div>
+
+            <div class="section-separator"></div>
+        </div>
+
+        <!-- SECOND SECTION: SHUTTER SHADE STUDIOS OTHER STUFF -->
+        <div class="page-wrapper">
+            <div class="content-area">
+                <div class="section">
+                    <h2>My Contacts</h2>
+                    <a href="https://scratch.mit.edu/users/bavo3211/" target="_blank" class="button-link">Scratch</a>
+                    <a href="https://onlinesequencer.net/members/179892" target="_blank" class="button-link">Online Sequencer</a>
+                    <a href="https://www.youtube.com/@bavo32111" target="_blank" class="button-link">Youtube</a>
+                </div>
+
+                <div class="section">
+                    <h2>Other Stuff I Did</h2>
+                    <a href="https://docs.google.com/presentation/d/1RIRxfZMg3qToy95NJ3TE__8PjiDiwOhgjii6ObCIxss/edit?usp=sharing" target="_blank" class="button-link">Old Stuff (Google Slides)</a>
+                    
+                    <p style="margin-top: 10px;">Excerpt of my music!</p>
+
+                    <!-- Classic Sandbox Video Thumbnail -->
+                    <div class="sandbox-video">
+                        <h2>Take Your Time</h2> 
+                        <a href="https://youtu.be/C1pxCWjpPg4?si=YfLRlRsdV_209Q05" target="_blank">
+                            <img src="../images/take_your_time_thumb.png"
+                                 alt="Take Your Time Video Thumbnail">
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+
+            <div class="footer-bottom-content">
+                <div class="miniblog-header">MiniBlog!</div>
+                <p>Nothing yet!</p>
+                <div class="disclaimer-icon"></div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- SSS Site Footer -->
+    <footer class="site-footer">
+        <p>Shutter Shade Studios - Footer</p>
+    </footer>
+
+</body>
+</html>
