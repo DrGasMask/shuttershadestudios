@@ -35,7 +35,6 @@ const player = {
     isCrouching: false
 };
 
-// Double jump state
 let jumpCount = 0;
 const maxJumps = 2;
 
@@ -60,8 +59,8 @@ for (let i = 0; i < 2; i++) {
 let idleIndex = 0, idleTimer = 0;
 let runIndex = 0, runTimer = 0;
 let jumpIndex = 0, jumpTimer = 0;
-
 const idleSpeed = 30, runSpeedBase = 8, jumpSpeedBase = 20;
+
 let keys = {};
 
 let platforms = [];
@@ -69,6 +68,7 @@ let movingPlatforms = [];
 let hazards = [];
 let enemies = [];
 let finishBlock = null;
+
 const bgThemes = ["#87CEEB", "#FFA07A", "#98FB98", "#D8BFD8", "#FFD700"];
 
 // --- LEVEL GENERATOR ---
@@ -89,9 +89,11 @@ function generateLevel() {
 
     while (x < finishX - 120) {
         const width = Math.max(40, 100 - difficulty * 40);
-        const newY = Math.min(Math.max(lastY + (Math.random() - 0.5) * (100 + difficulty * 50), 200), 380);
+        const deltaY = (Math.random() - 0.5) * (100 + difficulty * 50);
+        const newY = Math.min(Math.max(lastY + deltaY, 200), 380);
 
         const platform = { x: x, y: newY, width: width, height: 15 };
+
         if (Math.random() < 0.2 + difficulty * 0.1) {
             platform.isMoving = true;
             platform.dir = Math.random() < 0.5 ? 1 : -1;
@@ -101,22 +103,52 @@ function generateLevel() {
             platforms.push(platform);
         }
 
-        if (Math.random() < 0.2 + difficulty * 0.1) {
-            hazards.push({ x: x + width / 2, y: newY - 10, width: 20, height: 10 });
+        lastY = newY;
+        x += width + (40 + Math.random() * (70 + difficulty * 50));
+    }
+
+    // place guaranteed spikes (hazards)
+    let spikeCount = 0;
+    while (spikeCount < 3) {
+        let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
+        let p = platforms[idx];
+        if (p) {
+            hazards.push({
+                x: p.x + Math.random() * Math.max(0, p.width - 20),
+                y: p.y - 10,
+                width: 20,
+                height: 10
+            });
+            spikeCount++;
         }
-        if (Math.random() < 0.15 + difficulty * 0.15) {
+    }
+    if (Math.random() < 0.6) {
+        let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
+        let p = platforms[idx];
+        if (p) hazards.push({
+            x: p.x + Math.random() * Math.max(0, p.width - 20),
+            y: p.y - 10,
+            width: 20,
+            height: 10
+        });
+    }
+
+    // guaranteed enemy
+    let enemyPlaced = false;
+    while (!enemyPlaced) {
+        let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
+        let p = platforms[idx];
+        if (p) {
             enemies.push({
-                x: x + 10,
-                y: newY - 30,
+                x: p.x + 10 + Math.random() * Math.max(0, p.width - 40),
+                y: p.y - 30,
                 width: 30,
                 height: 30,
                 dir: Math.random() < 0.5 ? -1 : 1,
                 speed: 1 + difficulty
             });
+            enemyPlaced = true;
         }
-
-        lastY = newY;
-        x += width + (40 + Math.random() * (70 + difficulty * 50));
     }
 
     finishBlock = {
@@ -149,16 +181,12 @@ document.addEventListener("keyup", e => keys[e.code] = false);
 function update() {
     if (!gameStarted) return;
 
-    // Crouch handling (C key)
+    // crouch correctly (adjust hitbox without falling through platforms)
     if (keys["KeyC"] && player.onGround) {
-        if (!player.isCrouching) {
-            // adjust Y so feet stay on ground when shrinking
-            player.y += (player.height - 30);
-        }
+        if (!player.isCrouching) player.y += (player.height - 30);
         player.height = 30;
         player.isCrouching = true;
     } else if (player.isCrouching) {
-        // stand back up, adjust Y so feet stay on ground
         player.y -= (48 - player.height);
         player.height = 48;
         player.isCrouching = false;
@@ -177,7 +205,6 @@ function update() {
         player.velX = 0;
     }
 
-    // Double jump
     if (keys["Space"] && jumpCount < maxJumps) {
         player.velY = -player.jumpStrength;
         jumpCount++;
@@ -221,6 +248,7 @@ function update() {
     enemies.forEach(en => {
         en.x += en.speed * en.dir;
         if (en.x < 0 || en.x + en.width > logicalWidth) en.dir *= -1;
+
         if (
             player.x < en.x + en.width &&
             player.x + player.width > en.x &&
@@ -236,7 +264,7 @@ function update() {
         player.y + player.height > finishBlock.y
     ) {
         score++;
-        generateLevel();
+        generateLevel(); // endless next level
     }
 
     draw();
@@ -287,26 +315,25 @@ function drawUI() {
 function draw() {
     ctx.clearRect(0, 0, logicalWidth, logicalHeight);
 
-    ctx.fillStyle = "#2e8b57";
+    ctx.fillStyle = "#2e8b57"; // platforms
     platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 
-    ctx.fillStyle = "#8A2BE2";
+    ctx.fillStyle = "#8A2BE2"; // moving platforms
     movingPlatforms.forEach(mp => ctx.fillRect(mp.x, mp.y, mp.width, mp.height));
 
-    ctx.fillStyle = "#FF8C00";
+    ctx.fillStyle = "#FF8C00"; // spikes
     hazards.forEach(hz => ctx.fillRect(hz.x, hz.y, hz.width, hz.height));
 
-    ctx.fillStyle = "#FF0000";
+    ctx.fillStyle = "#FF0000"; // enemies
     enemies.forEach(en => ctx.fillRect(en.x, en.y, en.width, en.height));
 
-    ctx.fillStyle = "#000";
+    ctx.fillStyle = "#000"; // finish block
     ctx.fillRect(finishBlock.x, finishBlock.y, finishBlock.width, finishBlock.height);
 
     drawPlayer();
     drawUI();
 }
 
-// --- START GAME ---
 function startGame() {
     generateLevel();
     gameStarted = true;
