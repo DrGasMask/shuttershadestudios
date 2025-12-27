@@ -9,14 +9,12 @@ const dpr = window.devicePixelRatio || 1;
 const logicalWidth = 800;
 const logicalHeight = 450;
 
-// Set canvas size
 canvas.width = logicalWidth * dpr;
 canvas.height = logicalHeight * dpr;
 canvas.style.width = `${logicalWidth}px`;
 canvas.style.height = `${logicalHeight}px`;
 ctx.scale(dpr, dpr);
 
-// Smooth scaling for high-res sprites
 ctx.imageSmoothingEnabled = true;
 ctx.imageSmoothingQuality = "high";
 
@@ -35,25 +33,27 @@ const player = {
     facingRight: true
 };
 
-// Load sprites
+// Load idle sprites (images folder)
 const idleFrames = [];
 for (let i = 0; i < 2; i++) {
     const img = new Image();
-    img.src = `assets/player_idle${i}.png`;
+    img.src = `images/player_idle${i}.png`;
     idleFrames.push(img);
 }
 
+// Load run sprites (images folder)
 const runFrames = [];
 for (let i = 0; i < 5; i++) {
     const img = new Image();
-    img.src = `assets/player_run${i}.png`;
+    img.src = `images/player_run${i}.png`;
     runFrames.push(img);
 }
 
+// Load jump sprites (images folder)
 const jumpFrames = [];
 for (let i = 0; i < 2; i++) {
     const img = new Image();
-    img.src = `assets/player_jump${i}.png`;
+    img.src = `images/player_jump${i}.png`;
     jumpFrames.push(img);
 }
 
@@ -62,7 +62,7 @@ let idleIndex = 0, idleTimer = 0;
 let runIndex = 0, runTimer = 0;
 let jumpIndex = 0, jumpTimer = 0;
 
-// Base animation speeds
+// Animation speeds
 const idleSpeed = 30;
 const runSpeedBase = 8;
 const jumpSpeedBase = 20;
@@ -76,13 +76,8 @@ const platforms = [
     { x: 550, y: 190, width: 100, height: 15 }
 ];
 
-// --- FINISH BLOCK SETUP ---
-const finishBlock = {
-    x: 700,
-    y: 140,
-    width: 50,
-    height: 50
-};
+// Finish block
+const finishBlock = { x: 700, y: 140, width: 50, height: 50 };
 
 // --- 3. Input Handling ---
 document.addEventListener("keydown", e => keys[e.code] = true);
@@ -90,13 +85,11 @@ document.addEventListener("keyup", e => keys[e.code] = false);
 
 // --- 4. Game Loop & Physics ---
 function update() {
-    // Don’t update physics if game not started or after finish
     if (!gameStarted || gameFinished) return;
 
     const isSlow = keys["KeyC"];
     const speedMultiplier = isSlow ? 0.5 : 1;
 
-    // Movement
     if (keys["KeyA"]) {
         player.velX = -player.speed * speedMultiplier;
         player.facingRight = false;
@@ -107,7 +100,6 @@ function update() {
         player.velX = 0;
     }
 
-    // Jump
     if (keys["Space"] && player.onGround) {
         player.velY = -player.jumpStrength;
         player.onGround = false;
@@ -117,7 +109,6 @@ function update() {
     player.x += player.velX;
     player.y += player.velY;
 
-    // Platform collision
     player.onGround = false;
     platforms.forEach(p => {
         if (
@@ -132,7 +123,7 @@ function update() {
         }
     });
 
-    // Finish collision
+    // Check finish block
     if (
         player.x < finishBlock.x + finishBlock.width &&
         player.x + player.width > finishBlock.x &&
@@ -189,12 +180,11 @@ function drawPlayer() {
 }
 
 function draw() {
-    // If finished: black screen + text
     if (gameFinished) {
-        ctx.fillStyle = "#000";               // black background
+        ctx.fillStyle = "#000";
         ctx.fillRect(0, 0, logicalWidth, logicalHeight);
 
-        ctx.fillStyle = "#fff";               // white text
+        ctx.fillStyle = "#fff";
         ctx.font = "26px Arial";
         ctx.textAlign = "center";
         ctx.fillText(
@@ -207,11 +197,9 @@ function draw() {
 
     ctx.clearRect(0, 0, logicalWidth, logicalHeight);
 
-    // Draw platforms
     ctx.fillStyle = "#2e8b57";
     platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 
-    // Draw finish block
     ctx.fillStyle = "#000";
     ctx.fillRect(finishBlock.x, finishBlock.y, finishBlock.width, finishBlock.height);
 
