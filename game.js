@@ -1,29 +1,24 @@
-// --- GLOBAL GAME STATE ---
+// ================== GLOBAL STATE ==================
 let gameStarted = false;
-let keys = {};
-let cameraX = 0;
-let levelWidth = 2000; // Longer levels
-let playerStart = { x: 50, y: 350 };
+let levelNumber = 0;
 
-// --- 1. High-DPI Canvas Setup ---
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const dpr = window.devicePixelRatio || 1;
-const logicalWidth = 800;
-const logicalHeight = 450;
 
-canvas.width = logicalWidth * dpr;
-canvas.height = logicalHeight * dpr;
-canvas.style.width = `${logicalWidth}px`;
-canvas.style.height = `${logicalHeight}px`;
+const WIDTH = 800;
+const HEIGHT = 450;
+
+canvas.width = WIDTH * dpr;
+canvas.height = HEIGHT * dpr;
+canvas.style.width = WIDTH + "px";
+canvas.style.height = HEIGHT + "px";
 ctx.scale(dpr, dpr);
-ctx.imageSmoothingEnabled = true;
-ctx.imageSmoothingQuality = "high";
 
-// --- 2. Player Setup ---
+// ================== PLAYER ==================
 const player = {
-    x: playerStart.x,
-    y: playerStart.y,
+    x: 50,
+    y: 350,
     width: 48,
     height: 48,
     velX: 0,
@@ -33,217 +28,253 @@ const player = {
     gravity: 0.4,
     onGround: false,
     facingRight: true,
-    canDoubleJump: true,
-    isCrouching: false,
+    isCrouching: false
 };
 
-// --- Sprites ---
-const idleFrames = [], runFrames = [], jumpFrames = [], crouchFrames = [];
-for (let i = 0; i < 2; i++) { let img = new Image(); img.src = `images/player_idle${i}.png`; idleFrames.push(img); }
-for (let i = 0; i < 5; i++) { let img = new Image(); img.src = `images/player_run${i}.png`; runFrames.push(img); }
-for (let i = 0; i < 2; i++) { let img = new Image(); img.src = `images/player_jump${i}.png`; jumpFrames.push(img); }
-for (let i = 0; i < 1; i++) { let img = new Image(); img.src = `images/player_crouch${i}.png`; crouchFrames.push(img); }
+let jumpCount = 0;
+const MAX_JUMPS = 2;
 
-let idleIndex=0, idleTimer=0, runIndex=0, runTimer=0, jumpIndex=0, jumpTimer=0;
+// ================== SPRITES ==================
+const idleFrames = [], runFrames = [], jumpFrames = [];
 
-// --- Level Generation ---
-let platforms = [];
-let spikes = [];
-let enemies = [];
-let walls = [];
-let finishBlock = { x: levelWidth - 100, y: 200, width: 50, height: 50, baseY: 200 };
-
-function generateLevel() {
-    platforms = [
-        { x: 0, y: 400, width: levelWidth, height: 20 },
-    ];
-
-    spikes = [];
-    enemies = [];
-    walls = [];
-
-    // Random spikes
-    for (let i = 0; i < 4; i++) {
-        let x = 200 + Math.random() * (levelWidth - 400);
-        spikes.push({ x, y: 380, width: 20, height: 20 });
-    }
-
-    // Enemies
-    for (let i = 0; i < 3; i++) {
-        let x = 200 + Math.random() * (levelWidth - 400);
-        let y = 350;
-        let dir = Math.random() < 0.5 ? 1 : -1;
-        enemies.push({ x, y, width: 40, height: 40, speed: 1.5, dir });
-    }
-
-    // Walls
-    for (let i = 0; i < 2; i++) {
-        let x = 300 + Math.random() * (levelWidth - 600);
-        walls.push({ x, y: 300, width: 20, height: 100 });
-    }
-
-    // Finish block
-    finishBlock.baseY = 200 + Math.random() * 50;
-    finishBlock.y = finishBlock.baseY;
-
-    // Reset player
-    player.x = playerStart.x;
-    player.y = playerStart.y;
-    player.velX = 0;
-    player.velY = 0;
-    player.onGround = false;
-    player.canDoubleJump = true;
-    cameraX = 0;
+for (let i = 0; i < 2; i++) {
+    let img = new Image();
+    img.src = `images/player_idle${i}.png`;
+    idleFrames.push(img);
+}
+for (let i = 0; i < 5; i++) {
+    let img = new Image();
+    img.src = `images/player_run${i}.png`;
+    runFrames.push(img);
+}
+for (let i = 0; i < 2; i++) {
+    let img = new Image();
+    img.src = `images/player_jump${i}.png`;
+    jumpFrames.push(img);
 }
 
-// --- Input Handling ---
+let idleIndex = 0, runIndex = 0, jumpIndex = 0;
+let idleTimer = 0, runTimer = 0, jumpTimer = 0;
+
+const idleSpeed = 30;
+const runSpeedBase = 8;
+const jumpSpeedBase = 20;
+
+// ================== INPUT ==================
+const keys = {};
 document.addEventListener("keydown", e => keys[e.code] = true);
 document.addEventListener("keyup", e => keys[e.code] = false);
 
-// --- Game Loop & Physics ---
+// ================== LEVEL DATA ==================
+let platforms = [];
+let walls = [];
+let spikes = [];
+let enemies = [];
+let finishBlock = null;
+
+// ================== LEVEL GENERATION ==================
+function generateLevel() {
+    platforms = [];
+    walls = [];
+    spikes = [];
+    enemies = [];
+
+    levelNumber++;
+
+    // --- Ground ---
+    platforms.push({ x: 0, y: 400, width: WIDTH, height: 20 });
+
+    // --- Platforms ---
+    let x = 120;
+    let lastY = 330;
+
+    while (x < 600) {
+        let y = Math.max(200, Math.min(360, lastY + (Math.random() - 0.5) * 120));
+        platforms.push({ x, y, width: 100, height: 15 });
+        lastY = y;
+        x += 140;
+    }
+
+    // --- Walls (1–2) ---
+    const wallCount = Math.random() < 0.5 ? 1 : 2;
+    for (let i = 0; i < wallCount; i++) {
+        let base = platforms[Math.floor(Math.random() * platforms.length)];
+        walls.push({
+            x: base.x + base.width - 10,
+            y: base.y - 80,
+            width: 20,
+            height: 80
+        });
+    }
+
+    // --- Spikes (5–7) ---
+    const spikeCount = 5 + Math.floor(Math.random() * 3);
+    for (let i = 0; i < spikeCount; i++) {
+        let p = platforms[Math.floor(Math.random() * platforms.length)];
+        spikes.push({
+            x: p.x + Math.random() * (p.width - 20),
+            y: p.y - 10,
+            width: 20,
+            height: 10
+        });
+    }
+
+    // --- Enemies (EXACTLY 3) ---
+    while (enemies.length < 3) {
+        let p = platforms[Math.floor(Math.random() * platforms.length)];
+        enemies.push({
+            x: p.x + 10,
+            y: p.y - 30,
+            width: 30,
+            height: 30,
+            dir: Math.random() < 0.5 ? -1 : 1,
+            speed: 1.2
+        });
+    }
+
+    // --- Finish Block ---
+    finishBlock = {
+        x: 700,
+        y: Math.max(220, Math.min(360, lastY - 40 + (Math.random() - 0.5) * 40)),
+        width: 50,
+        height: 50
+    };
+
+    respawn();
+}
+
+// ================== RESPAWN ==================
+function respawn() {
+    player.x = 50;
+    player.y = 350;
+    player.velX = 0;
+    player.velY = 0;
+    player.height = 48;
+    player.isCrouching = false;
+    jumpCount = 0;
+}
+
+// ================== UPDATE ==================
 function update() {
     if (!gameStarted) return;
 
-    // --- Player Movement ---
-    player.isCrouching = keys["KeyC"];
-    const isSlow = keys["KeyS"];
-    const speedMult = isSlow ? 0.5 : 1;
-
-    if (keys["KeyA"]) { player.velX = -player.speed * speedMult; player.facingRight=false; }
-    else if (keys["KeyD"]) { player.velX = player.speed * speedMult; player.facingRight=true; }
-    else player.velX = 0;
-
-    // Jumping
-    if (keys["Space"]) {
-        if (player.onGround) {
-            player.velY = -player.jumpStrength;
-            player.onGround = false;
-            player.canDoubleJump = true;
-        } else if (player.canDoubleJump) {
-            player.velY = -player.jumpStrength;
-            player.canDoubleJump = false;
-        }
+    // --- Crouch ---
+    if (keys["KeyC"] && player.onGround) {
+        if (!player.isCrouching) player.y += 18;
+        player.height = 30;
+        player.isCrouching = true;
+    } else if (player.isCrouching) {
+        player.y -= 18;
+        player.height = 48;
+        player.isCrouching = false;
     }
 
-    // Gravity
+    // --- Movement ---
+    let slow = keys["KeyS"] ? 0.5 : 1;
+
+    if (keys["KeyA"]) player.velX = -player.speed * slow;
+    else if (keys["KeyD"]) player.velX = player.speed * slow;
+    else player.velX = 0;
+
+    if (keys["Space"] && jumpCount < MAX_JUMPS) {
+        player.velY = -player.jumpStrength;
+        jumpCount++;
+        keys["Space"] = false;
+    }
+
     player.velY += player.gravity;
     player.x += player.velX;
     player.y += player.velY;
-
-    // Platform collision
     player.onGround = false;
+
+    // --- Platform collision ---
     platforms.forEach(p => {
-        if (player.x < p.x + p.width && player.x + player.width > p.x &&
-            player.y + player.height <= p.y + 10 && player.y + player.height + player.velY >= p.y) {
+        if (
+            player.x < p.x + p.width &&
+            player.x + player.width > p.x &&
+            player.y + player.height <= p.y + 10 &&
+            player.y + player.height + player.velY >= p.y
+        ) {
             player.y = p.y - player.height;
             player.velY = 0;
             player.onGround = true;
+            jumpCount = 0;
         }
     });
 
-    // Spikes/Enemies collision (reset player)
-    const resetPlayer = obj => {
-        if (player.x < obj.x + obj.width &&
-            player.x + player.width > obj.x &&
-            player.y < obj.y + obj.height &&
-            player.y + player.height > obj.y) {
-            player.x = playerStart.x;
-            player.y = playerStart.y;
-            player.velX = 0;
-            player.velY = 0;
-            player.onGround = false;
-            player.canDoubleJump = true;
+    // --- Walls ---
+    walls.forEach(w => {
+        if (
+            player.x < w.x + w.width &&
+            player.x + player.width > w.x &&
+            player.y < w.y + w.height &&
+            player.y + player.height > w.y
+        ) {
+            player.x -= player.velX;
         }
-    };
+    });
 
-    spikes.forEach(resetPlayer);
-    enemies.forEach(resetPlayer);
-    walls.forEach(resetPlayer);
+    // --- Spikes ---
+    spikes.forEach(s => {
+        if (collide(player, s)) respawn();
+    });
 
-    // Enemy movement (patrolling)
+    // --- Enemies ---
     enemies.forEach(e => {
         e.x += e.speed * e.dir;
-        if (e.x < 200 || e.x > levelWidth - 200) e.dir *= -1;
+        if (e.x < 0 || e.x + e.width > WIDTH) e.dir *= -1;
+        if (collide(player, e)) respawn();
     });
 
-    // Finish collision
-    if (player.x < finishBlock.x + finishBlock.width &&
-        player.x + player.width > finishBlock.x &&
-        player.y < finishBlock.y + finishBlock.height &&
-        player.y + player.height > finishBlock.y) {
-        generateLevel();
-    }
-
-    // Camera follows player
-    cameraX = Math.max(0, Math.min(player.x - 200, levelWidth - logicalWidth));
+    // --- Finish ---
+    if (collide(player, finishBlock)) generateLevel();
 
     draw();
     requestAnimationFrame(update);
 }
 
-// --- Drawing ---
-function drawPlayer() {
-    let currentSprite;
-    const runSpeed = 8, jumpSpeed = 20;
-
-    if (player.isCrouching) currentSprite = crouchFrames[0];
-    else if (!player.onGround) {
-        jumpTimer++;
-        if (jumpTimer >= jumpSpeed) { jumpTimer=0; jumpIndex=(jumpIndex+1)%jumpFrames.length; }
-        currentSprite = jumpFrames[jumpIndex];
-    } else if (player.velX !==0) {
-        runTimer++;
-        if (runTimer >= runSpeed) { runTimer=0; runIndex=(runIndex+1)%runFrames.length; }
-        currentSprite = runFrames[runIndex];
-    } else {
-        idleTimer++;
-        if (idleTimer >= 30) { idleTimer=0; idleIndex=(idleIndex+1)%idleFrames.length; }
-        currentSprite = idleFrames[idleIndex];
-    }
-
-    if (!currentSprite.complete) return;
-
-    ctx.save();
-    const drawX = player.x - cameraX;
-    const drawY = player.y;
-
-    if (!player.facingRight) {
-        ctx.translate(drawX + player.width, drawY);
-        ctx.scale(-1,1);
-        ctx.drawImage(currentSprite,0,0,player.width,player.height);
-    } else ctx.drawImage(currentSprite, drawX, drawY, player.width, player.height);
-
-    ctx.restore();
+// ================== COLLISION ==================
+function collide(a, b) {
+    return (
+        a.x < b.x + b.width &&
+        a.x + a.width > b.x &&
+        a.y < b.y + b.height &&
+        a.y + a.height > b.y
+    );
 }
 
+// ================== DRAW ==================
 function draw() {
-    ctx.clearRect(0,0,logicalWidth,logicalHeight);
+    ctx.clearRect(0, 0, WIDTH, HEIGHT);
 
-    // Platforms
     ctx.fillStyle = "#2e8b57";
-    platforms.forEach(p => ctx.fillRect(p.x - cameraX, p.y, p.width, p.height));
+    platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
 
-    // Spikes
-    ctx.fillStyle = "red";
-    spikes.forEach(s => ctx.fillRect(s.x - cameraX, s.y, s.width, s.height));
+    ctx.fillStyle = "#555";
+    walls.forEach(w => ctx.fillRect(w.x, w.y, w.width, w.height));
 
-    // Walls
-    ctx.fillStyle = "gray";
-    walls.forEach(w => ctx.fillRect(w.x - cameraX, w.y, w.width, w.height));
+    ctx.fillStyle = "#ff8800";
+    spikes.forEach(s => ctx.fillRect(s.x, s.y, s.width, s.height));
 
-    // Enemies
-    ctx.fillStyle = "red";
-    enemies.forEach(e => ctx.fillRect(e.x - cameraX, e.y, e.width, e.height));
+    ctx.fillStyle = "#ff0000";
+    enemies.forEach(e => ctx.fillRect(e.x, e.y, e.width, e.height));
 
-    // Finish block
-    ctx.fillStyle = "black";
-    finishBlock.y = finishBlock.baseY + Math.sin(Date.now()/300)*10; // slight vertical movement
-    ctx.fillRect(finishBlock.x - cameraX, finishBlock.y, finishBlock.width, finishBlock.height);
+    ctx.fillStyle = "#000";
+    ctx.fillRect(finishBlock.x, finishBlock.y, finishBlock.width, finishBlock.height);
 
     drawPlayer();
 }
 
-// --- START ---
+// ================== PLAYER DRAW ==================
+function drawPlayer() {
+    let sprite = idleFrames[0];
+    if (!player.onGround) sprite = jumpFrames[jumpIndex];
+    else if (player.velX !== 0) sprite = runFrames[runIndex];
+
+    ctx.drawImage(sprite, player.x, player.y, player.width, player.height);
+}
+
+// ================== START ==================
 function startGame() {
     generateLevel();
     gameStarted = true;
@@ -252,6 +283,6 @@ function startGame() {
 
 document.getElementById("playButton").addEventListener("click", () => {
     document.getElementById("introScreen").style.display = "none";
-    document.getElementById("gameCanvas").style.display = "block";
+    canvas.style.display = "block";
     startGame();
 });
