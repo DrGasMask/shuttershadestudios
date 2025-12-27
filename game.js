@@ -39,21 +39,21 @@ const player = {
 const idleFrames = [];
 for (let i = 0; i < 2; i++) {
     const img = new Image();
-    img.src = `assets/player_idle${i}.png`;
+    img.src = `images/player_idle${i}.png`;
     idleFrames.push(img);
 }
 
 const runFrames = [];
 for (let i = 0; i < 5; i++) {
     const img = new Image();
-    img.src = `assets/player_run${i}.png`;
+    img.src = `images/player_run${i}.png`;
     runFrames.push(img);
 }
 
 const jumpFrames = [];
 for (let i = 0; i < 2; i++) {
     const img = new Image();
-    img.src = `assets/player_jump${i}.png`;
+    img.src = `images/player_jump${i}.png`;
     jumpFrames.push(img);
 }
 
@@ -229,3 +229,4 @@ document.getElementById("playButton").addEventListener("click", () => {
     document.getElementById("gameCanvas").style.display = "block";
     startGame();
 });
+
