@@ -1,0 +1,51 @@
+/* Intro Screen Styling */
+.intro-screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 500px;
+    padding: 20px;
+}
+
+.intro-main {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 40px; /* space between logo, play button, and controls */
+    flex-wrap: wrap;
+}
+
+/* Logo */
+.intro-logo img {
+    max-width: 300px;
+    width: 100%;
+}
+
+/* Play button */
+.intro-play button {
+    font-size: 28px;
+    padding: 14px 36px;
+    cursor: pointer;
+}
+
+/* Controls list */
+.intro-controls {
+    text-align: left;
+    font-size: 18px;
+}
+
+.intro-controls h2 {
+    margin-bottom: 10px;
+}
+
+.intro-controls ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.intro-controls li {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
