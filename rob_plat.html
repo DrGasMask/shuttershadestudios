@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <title>Rob Platformer - Shutter Shade Studios</title>
 
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+
     <!-- renamed CSS so no collisions -->
     <link rel="stylesheet" href="parkour-styles.css">
 
@@ -57,7 +60,6 @@
             min-height: 500px;
         }
 
-        /* Container for logo + controls side by side */
         .intro-logo-controls {
             display: flex;
             justify-content: center;
@@ -66,39 +68,38 @@
             flex-wrap: wrap;
         }
 
-        /* Intro logo */
         #introScreen img {
             max-width: 300px;
             width: 60%;
         }
 
-        /* Controls list next to logo */
         .controls-list {
             text-align: left;
             font-size: 18px;
             max-width: 300px;
         }
+
         .controls-list h2 {
             margin-bottom: 10px;
         }
+
         .controls-list ul {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .controls-list li {
             margin-bottom: 8px;
             font-weight: bold;
         }
 
-        /* Play button */
         #playButton {
             font-size: 24px;
             padding: 12px 30px;
             cursor: pointer;
         }
 
-        /* ===== SSS FOOTER ===== */
         footer {
             background-color: #2a7f2a;
             color: white;
@@ -109,73 +110,6 @@
     </style>
 </head>
 <body>
-
-    <!-- SSS HEADER -->
-    <header>
-        <h1>Shutter Shade Studios</h1>
-        <nav>
-            <ul>
-                <li><a href="index.html">Home</a></li>
-                <li><a href="members.html">Our Members</a></li>
-                <li><a href="games.html">Games</a></li>
-                <li><a href="films.html">Films & Shows</a></li>
-                <li><a href="blog.html">Blog</a></li>
-                <li><a href="contact.html">Where to Find Us</a></li>
-            </ul>
-        </nav>
-    </header>
-
-    <!-- PAGE CONTENT -->
-    <div class="page-content">
-
-        <!-- Intro / Title Screen -->
-        <div id="introScreen">
-
-            <div class="intro-logo-controls">
-                <!-- Logo -->
-                <img id="gameLogo" src="assets/game_logo.png" alt="Game Logo">
-
-                <!-- Controls Instructions -->
-                <div class="controls-list">
-                    <h2>Controls</h2>
-                    <ul>
-                        <li><strong>A</strong> — Move Left</li>
-                        <li><strong>D</strong> — Move Right</li>
-                        <li><strong>Space</strong> — Jump</li>
-                        <li><strong>C</strong> — Slow / Crouch</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- Play button -->
-            <button id="playButton">Play</button>
-
-        </div>
-
-        <!-- Game Canvas hidden initially -->
-        <canvas id="gameCanvas" width="800" height="450" style="display:none;"></canvas>
-
-    </div>
-
-    <!-- SSS FOOTER -->
-    <footer>
-        <p>Shutter Shade Studios - Footer</p>
-    </footer>
-
-    <script src="game.js"></script>
-    <script>
-        // Intro → Start Game logic
-        const introScreen = document.getElementById("introScreen");
-        const playButton = document.getElementById("playButton");
-        const canvas = document.getElementById("gameCanvas");
-
-        playButton.addEventListener("click", () => {
-            introScreen.style.display = "none";   // hide the intro
-            canvas.style.display = "block";       // show the canvas
-            if (typeof update === "function") {   // start the game if ready
-                update();
-            }
-        });
-    </script>
+    ...
 </body>
 </html>
