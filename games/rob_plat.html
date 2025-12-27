@@ -37,7 +37,6 @@
             font-weight: bold;
             text-decoration: none;
         }
-
         header nav ul li a:hover {
             text-decoration: underline;
         }
@@ -57,7 +56,7 @@
             min-height: 500px;
         }
 
-        /* Container for logo + controls side by side */
+        /* Logo + controls side by side */
         .intro-logo-controls {
             display: flex;
             justify-content: center;
@@ -66,13 +65,11 @@
             flex-wrap: wrap;
         }
 
-        /* Intro logo */
         #introScreen img {
             max-width: 300px;
             width: 60%;
         }
 
-        /* Controls list next to logo */
         .controls-list {
             text-align: left;
             font-size: 18px;
@@ -91,14 +88,12 @@
             font-weight: bold;
         }
 
-        /* Play button */
         #playButton {
             font-size: 24px;
             padding: 12px 30px;
             cursor: pointer;
         }
 
-        /* ===== SSS FOOTER ===== */
         footer {
             background-color: #2a7f2a;
             color: white;
@@ -132,10 +127,10 @@
         <div id="introScreen">
 
             <div class="intro-logo-controls">
-                <!-- Logo -->
-                <img id="gameLogo" src="assets/game_logo.png" alt="Game Logo">
+                <!-- Logo (now points to images folder) -->
+                <img id="gameLogo" src="images/game_logo.png" alt="Game Logo">
 
-                <!-- Controls Instructions -->
+                <!-- Controls -->
                 <div class="controls-list">
                     <h2>Controls</h2>
                     <ul>
@@ -147,12 +142,11 @@
                 </div>
             </div>
 
-            <!-- Play button -->
             <button id="playButton">Play</button>
 
         </div>
 
-        <!-- Game Canvas hidden initially -->
+        <!-- Game Canvas (hidden until Play) -->
         <canvas id="gameCanvas" width="800" height="450" style="display:none;"></canvas>
 
     </div>
@@ -164,15 +158,14 @@
 
     <script src="game.js"></script>
     <script>
-        // Intro → Start Game logic
         const introScreen = document.getElementById("introScreen");
         const playButton = document.getElementById("playButton");
         const canvas = document.getElementById("gameCanvas");
 
         playButton.addEventListener("click", () => {
-            introScreen.style.display = "none";   // hide the intro
-            canvas.style.display = "block";       // show the canvas
-            if (typeof update === "function") {   // start the game if ready
+            introScreen.style.display = "none";
+            canvas.style.display = "block";
+            if (typeof update === "function") {
                 update();
             }
         });
