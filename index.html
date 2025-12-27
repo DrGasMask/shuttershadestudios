@@ -52,7 +52,7 @@
 
     /* ===== Push content below header ===== */
     .page-content {
-      padding-top: 140px; /* matches header height */
+      padding-top: 140px;
     }
 
     /* ===== Footer ===== */
@@ -72,40 +72,6 @@
 
     h2 {
       color: #2a7f2a;
-    }
-
-    /* Buttons */
-    .buttons {
-      display: flex;
-      gap: 10px;
-      margin-top: 10px;
-    }
-
-    .btn {
-      background-color: #2a7f2a;
-      color: white;
-      padding: 10px 15px;
-      text-decoration: none;
-      border-radius: 5px;
-    }
-
-    .btn:hover {
-      background-color: #1f5c1f;
-    }
-
-    /* Social links */
-    #social ul {
-      list-style: none;
-      padding: 0;
-    }
-
-    #social ul li a {
-      color: #2a7f2a;
-      text-decoration: none;
-    }
-
-    #social ul li a:hover {
-      text-decoration: underline;
     }
 
     /* Categories Section */
@@ -158,11 +124,6 @@
       max-width: 900px;
     }
 
-    #contact h2 {
-      color: #2a7f2a;
-      margin-bottom: 20px;
-    }
-
     .contact-links {
       display: flex;
       justify-content: center;
@@ -186,11 +147,6 @@
       margin: 0 auto 10px auto;
     }
 
-    .contact-item p {
-      margin: 0;
-      font-weight: bold;
-    }
-
     .contact-item a {
       color: #00FF00;
       text-decoration: none;
@@ -198,6 +154,14 @@
 
     .contact-item:hover {
       transform: translateY(-5px);
+    }
+
+    /* ===== Visit Counter ===== */
+    #visit-counter {
+      text-align: center;
+      margin: 40px 0 10px 0;
+      font-weight: bold;
+      color: #2a7f2a;
     }
 
     /* Responsive */
@@ -216,92 +180,102 @@
 </head>
 <body>
 
-  <!-- Updated SSS Header from redsantababy.html -->
-  <header>
-    <h1>Shutter Shade Studios</h1>
-    <nav>
+<header>
+  <h1>Shutter Shade Studios</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Our Members</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="films.html">Films & Shows</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Where to Find Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="page-content">
+
+  <main>
+    <h2>Welcome to the official Shutter Shade Studios Website!</h2>
+    <p>Enjoy your stay :3 - bavo3211</p>
+    <p>Yeah I agree with this bavo guy - Impartiality Angel</p>
+    <p>Unlike those two I hope your stay SUCKS >:( - Discriminative Goblin</p>
+  </main>
+
+  <section id="categories">
+    <div class="category-column">
+      <h3>Our Stuff</h3>
       <ul>
-        <li><a href="index.html">Home</a></li>
-        <li><a href="members.html">Our Members</a></li>
-        <li><a href="games.html">Games</a></li>
-        <li><a href="films.html">Films & Shows</a></li>
+        <li><a href="games.html">Projects</a></li>
         <li><a href="blog.html">Blog</a></li>
-        <li><a href="contact.html">Where to Find Us</a></li>
       </ul>
-    </nav>
-  </header>
+    </div>
 
-  <!-- Page Content with top padding to prevent overlap -->
-  <div class="page-content">
+    <div class="category-column">
+      <h3>Our Members</h3>
+      <ul>
+        <li><a href="members/sqishdummy.html">Sqishdummy (Founder)</a></li>
+        <li><a href="members/yoyo.html">YoyoTheBest2012 (Dev)</a></li>
+        <li><a href="members/bavo.html">bavo3211 (Dev)</a></li>
+        <li><a href="members/redsantababy.html">Redsantababy (Dev)</a></li>
+        <li><a href="members/jgplayscool.html">JGplayscool (Helper)</a></li>
+      </ul>
+    </div>
+  </section>
 
-    <main>
-      <section id="welcome">
-        <h2>Welcome to the official Shutter Shade Studios Website!</h2>
-        <p>Enjoy your stay :3 - bavo3211</p>
-        <p>Yeah I agree with this bavo guy - Impartiality Angel</p>
-        <p>Unlike those two I hope your stay SUCKS >:( - Discriminative Goblin</p>
-      </section>
-    </main>
+  <section id="contact">
+    <h2>Where To Find Us</h2>
+    <div class="contact-links">
 
-    <section id="categories">
-      <div class="category-column">
-        <h3>Our Stuff</h3>
-        <ul>
-          <li><a href="games.html">Projects</a></li>
-          <li><a href="blog.html">Blog</a></li>
-        </ul>
+      <div class="contact-item">
+        <a href="https://www.youtube.com/@ShutterShadeStudios/videos" target="_blank">
+          <img src="images/youtube.png" width="50">
+          <p>ShutterShadeStudios</p>
+        </a>
       </div>
 
-      <div class="category-column">
-        <h3>Our Members</h3>
-        <ul>
-          <li><a href="members/sqishdummy.html">Sqishdummy (Founder)</a></li>
-          <li><a href="members/yoyo.html">YoyoTheBest2012 (Dev)</a></li>
-          <li><a href="members/bavo.html">bavo3211 (Dev)</a></li>
-          <li><a href="members/redsantababy.html">Redsantababy (Dev)</a></li>
-          <li><a href="members/jgplayscool.html">JGplayscool (Helper)</a></li>
-        </ul>
+      <div class="contact-item">
+        <a href="https://www.youtube.com/@ShutterShade-Films" target="_blank">
+          <img src="images/youtube.png" width="50">
+          <p>ShutterShadeFilms</p>
+        </a>
       </div>
-    </section>
 
-    <section id="contact">
-      <h2>Where To Find Us</h2>
-      <div class="contact-links">
-        <div class="contact-item">
-          <a href="https://www.youtube.com/@ShutterShadeStudios/videos" target="_blank">
-            <img src="images/youtube.png" alt="YouTube Logo" width="50">
-            <p>ShutterShadeStudios</p>
-          </a>
-        </div>
-
-        <div class="contact-item">
-          <a href="https://www.youtube.com/@ShutterShade-Films" target="_blank">
-            <img src="images/youtube.png" alt="YouTube Logo" width="50">
-            <p>ShutterShadeFilms</p>
-          </a>
-        </div>
-
-        <div class="contact-item">
-          <a href="https://discord.gg/Qx9UUPbq" target="_blank">
-            <img src="images/discord.png" alt="Discord Logo" width="50">
-            <p>Classic Sandbox Server</p>
-          </a>
-        </div>
-
-        <div class="contact-item">
-          <a href="https://www.roblox.com/communities/36013916/Shutter-Shade-Studios#!/about" target="_blank">
-            <img src="images/roblox.png" alt="Roblox Logo" width="50">
-            <p>Roblox Group</p>
-          </a>
-        </div>
+      <div class="contact-item">
+        <a href="https://discord.gg/Qx9UUPbq" target="_blank">
+          <img src="images/discord.png" width="50">
+          <p>Classic Sandbox Server</p>
+        </a>
       </div>
-    </section>
 
-  </div> <!-- /.page-content -->
+      <div class="contact-item">
+        <a href="https://www.roblox.com/communities/36013916/Shutter-Shade-Studios#!/about" target="_blank">
+          <img src="images/roblox.png" width="50">
+          <p>Roblox Group</p>
+        </a>
+      </div>
 
-  <footer>
-    <p>Shutter Shade Studios - Footer </p>
-  </footer>
+    </div>
+  </section>
+
+</div>
+
+<!-- Visit Counter (above footer) -->
+<div id="visit-counter">
+  Visits to this page: <span id="visitCount">0</span>
+</div>
+
+<footer>
+  <p>Shutter Shade Studios - Footer</p>
+</footer>
+
+<script>
+  let visits = localStorage.getItem("sss_visits");
+  visits = visits ? parseInt(visits) + 1 : 1;
+  localStorage.setItem("sss_visits", visits);
+  document.getElementById("visitCount").textContent = visits;
+</script>
 
 </body>
 </html>
