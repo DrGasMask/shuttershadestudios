@@ -1,28 +1,29 @@
-// ================== GLOBAL STATE ==================
+// --- GLOBAL GAME STATE ---
 let gameStarted = false;
-let levelNumber = 0;
+let keys = {};
+let cameraX = 0;
+let levelWidth = 2000; // Longer levels
+let playerStart = { x: 50, y: 350 };
 
+// --- 1. High-DPI Canvas Setup ---
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const dpr = window.devicePixelRatio || 1;
+const logicalWidth = 800;
+const logicalHeight = 450;
 
-const VIEW_WIDTH = 800;
-const VIEW_HEIGHT = 450;
-const LEVEL_WIDTH = 1800; // 🔥 LONGER LEVELS
-
-canvas.width = VIEW_WIDTH * dpr;
-canvas.height = VIEW_HEIGHT * dpr;
-canvas.style.width = VIEW_WIDTH + "px";
-canvas.style.height = VIEW_HEIGHT + "px";
+canvas.width = logicalWidth * dpr;
+canvas.height = logicalHeight * dpr;
+canvas.style.width = `${logicalWidth}px`;
+canvas.style.height = `${logicalHeight}px`;
 ctx.scale(dpr, dpr);
+ctx.imageSmoothingEnabled = true;
+ctx.imageSmoothingQuality = "high";
 
-// Camera
-let cameraX = 0;
-
-// ================== PLAYER ==================
+// --- 2. Player Setup ---
 const player = {
-    x: 50,
-    y: 350,
+    x: playerStart.x,
+    y: playerStart.y,
     width: 48,
     height: 48,
     velX: 0,
@@ -32,123 +33,96 @@ const player = {
     gravity: 0.4,
     onGround: false,
     facingRight: true,
-    isCrouching: false
+    canDoubleJump: true,
+    isCrouching: false,
 };
 
-let jumpCount = 0;
-const MAX_JUMPS = 2;
+// --- Sprites ---
+const idleFrames = [], runFrames = [], jumpFrames = [], crouchFrames = [];
+for (let i = 0; i < 2; i++) { let img = new Image(); img.src = `images/player_idle${i}.png`; idleFrames.push(img); }
+for (let i = 0; i < 5; i++) { let img = new Image(); img.src = `images/player_run${i}.png`; runFrames.push(img); }
+for (let i = 0; i < 2; i++) { let img = new Image(); img.src = `images/player_jump${i}.png`; jumpFrames.push(img); }
+for (let i = 0; i < 1; i++) { let img = new Image(); img.src = `images/player_crouch${i}.png`; crouchFrames.push(img); }
 
-// ================== INPUT ==================
-const keys = {};
-document.addEventListener("keydown", e => keys[e.code] = true);
-document.addEventListener("keyup", e => keys[e.code] = false);
+let idleIndex=0, idleTimer=0, runIndex=0, runTimer=0, jumpIndex=0, jumpTimer=0;
 
-// ================== LEVEL OBJECTS ==================
+// --- Level Generation ---
 let platforms = [];
 let spikes = [];
 let enemies = [];
 let walls = [];
-let finishBlock;
+let finishBlock = { x: levelWidth - 100, y: 200, width: 50, height: 50, baseY: 200 };
 
-// ================== LEVEL GENERATION ==================
 function generateLevel() {
-    platforms = [];
+    platforms = [
+        { x: 0, y: 400, width: levelWidth, height: 20 },
+    ];
+
     spikes = [];
     enemies = [];
     walls = [];
 
-    levelNumber++;
-
-    // Ground
-    platforms.push({ x: 0, y: 400, width: LEVEL_WIDTH, height: 20 });
-
-    // Platforms
-    let x = 120;
-    let lastY = 330;
-
-    while (x < LEVEL_WIDTH - 300) {
-        let y = Math.max(180, Math.min(360, lastY + (Math.random() - 0.5) * 140));
-        platforms.push({ x, y, width: 120, height: 15 });
-        lastY = y;
-        x += 160;
+    // Random spikes
+    for (let i = 0; i < 4; i++) {
+        let x = 200 + Math.random() * (levelWidth - 400);
+        spikes.push({ x, y: 380, width: 20, height: 20 });
     }
 
-    // Thin collision walls (1–2)
-    const wallCount = 1 + Math.floor(Math.random() * 2);
-    for (let i = 0; i < wallCount; i++) {
-        const px = 400 + Math.random() * (LEVEL_WIDTH - 600);
-        walls.push({
-            x: px,
-            y: 250,
-            width: 12,
-            height: 150
-        });
+    // Enemies
+    for (let i = 0; i < 3; i++) {
+        let x = 200 + Math.random() * (levelWidth - 400);
+        let y = 350;
+        let dir = Math.random() < 0.5 ? 1 : -1;
+        enemies.push({ x, y, width: 40, height: 40, speed: 1.5, dir });
     }
 
-    // Spikes (5–8)
-    const spikeCount = 5 + Math.floor(Math.random() * 4);
-    for (let i = 0; i < spikeCount; i++) {
-        let p = platforms[Math.floor(Math.random() * platforms.length)];
-        spikes.push({
-            x: p.x + Math.random() * (p.width - 20),
-            y: p.y - 10,
-            width: 20,
-            height: 10
-        });
+    // Walls
+    for (let i = 0; i < 2; i++) {
+        let x = 300 + Math.random() * (levelWidth - 600);
+        walls.push({ x, y: 300, width: 20, height: 100 });
     }
 
-    // Enemies (3)
-    while (enemies.length < 3) {
-        let p = platforms[Math.floor(Math.random() * platforms.length)];
-        enemies.push({
-            x: p.x + 10,
-            y: p.y - 30,
-            width: 30,
-            height: 30,
-            dir: Math.random() < 0.5 ? -1 : 1,
-            speed: 1.2
-        });
-    }
+    // Finish block
+    finishBlock.baseY = 200 + Math.random() * 50;
+    finishBlock.y = finishBlock.baseY;
 
-    // Finish block (fixed X, small Y variation)
-    finishBlock = {
-        x: LEVEL_WIDTH - 100,
-        y: Math.max(200, Math.min(350, lastY - 40 + (Math.random() - 0.5) * 40)),
-        width: 50,
-        height: 50
-    };
-
-    respawn();
-}
-
-// ================== RESPAWN ==================
-function respawn() {
-    player.x = 50;
-    player.y = 350;
+    // Reset player
+    player.x = playerStart.x;
+    player.y = playerStart.y;
     player.velX = 0;
     player.velY = 0;
-    player.height = 48;
-    player.isCrouching = false;
-    jumpCount = 0;
+    player.onGround = false;
+    player.canDoubleJump = true;
+    cameraX = 0;
 }
 
-// ================== UPDATE ==================
+// --- Input Handling ---
+document.addEventListener("keydown", e => keys[e.code] = true);
+document.addEventListener("keyup", e => keys[e.code] = false);
+
+// --- Game Loop & Physics ---
 function update() {
     if (!gameStarted) return;
 
-    // Slow (S)
-    const slow = keys["KeyS"] ? 0.5 : 1;
+    // --- Player Movement ---
+    player.isCrouching = keys["KeyC"];
+    const isSlow = keys["KeyS"];
+    const speedMult = isSlow ? 0.5 : 1;
 
-    // Movement
-    if (keys["KeyA"]) player.velX = -player.speed * slow;
-    else if (keys["KeyD"]) player.velX = player.speed * slow;
+    if (keys["KeyA"]) { player.velX = -player.speed * speedMult; player.facingRight=false; }
+    else if (keys["KeyD"]) { player.velX = player.speed * speedMult; player.facingRight=true; }
     else player.velX = 0;
 
-    // Jump / Double jump
-    if (keys["Space"] && jumpCount < MAX_JUMPS) {
-        player.velY = -player.jumpStrength;
-        jumpCount++;
-        keys["Space"] = false;
+    // Jumping
+    if (keys["Space"]) {
+        if (player.onGround) {
+            player.velY = -player.jumpStrength;
+            player.onGround = false;
+            player.canDoubleJump = true;
+        } else if (player.canDoubleJump) {
+            player.velY = -player.jumpStrength;
+            player.canDoubleJump = false;
+        }
     }
 
     // Gravity
@@ -156,91 +130,120 @@ function update() {
     player.x += player.velX;
     player.y += player.velY;
 
-    player.onGround = false;
-
     // Platform collision
+    player.onGround = false;
     platforms.forEach(p => {
-        if (
-            player.x < p.x + p.width &&
-            player.x + player.width > p.x &&
-            player.y + player.height <= p.y + 10 &&
-            player.y + player.height + player.velY >= p.y
-        ) {
+        if (player.x < p.x + p.width && player.x + player.width > p.x &&
+            player.y + player.height <= p.y + 10 && player.y + player.height + player.velY >= p.y) {
             player.y = p.y - player.height;
             player.velY = 0;
             player.onGround = true;
-            jumpCount = 0;
         }
     });
 
-    // Wall collision (thin gray blocks)
-    walls.forEach(w => {
-        if (collide(player, w)) {
-            player.x -= player.velX;
+    // Spikes/Enemies collision (reset player)
+    const resetPlayer = obj => {
+        if (player.x < obj.x + obj.width &&
+            player.x + player.width > obj.x &&
+            player.y < obj.y + obj.height &&
+            player.y + player.height > obj.y) {
+            player.x = playerStart.x;
+            player.y = playerStart.y;
+            player.velX = 0;
+            player.velY = 0;
+            player.onGround = false;
+            player.canDoubleJump = true;
         }
-    });
+    };
 
-    // Spikes
-    spikes.forEach(s => {
-        if (collide(player, s)) respawn();
-    });
+    spikes.forEach(resetPlayer);
+    enemies.forEach(resetPlayer);
+    walls.forEach(resetPlayer);
 
-    // Enemies
+    // Enemy movement (patrolling)
     enemies.forEach(e => {
         e.x += e.speed * e.dir;
-        if (e.x < 0 || e.x + e.width > LEVEL_WIDTH) e.dir *= -1;
-        if (collide(player, e)) respawn();
+        if (e.x < 200 || e.x > levelWidth - 200) e.dir *= -1;
     });
 
-    // Finish → new level
-    if (collide(player, finishBlock)) generateLevel();
+    // Finish collision
+    if (player.x < finishBlock.x + finishBlock.width &&
+        player.x + player.width > finishBlock.x &&
+        player.y < finishBlock.y + finishBlock.height &&
+        player.y + player.height > finishBlock.y) {
+        generateLevel();
+    }
 
-    // Camera follow
-    cameraX = Math.max(0, Math.min(player.x - VIEW_WIDTH / 2, LEVEL_WIDTH - VIEW_WIDTH));
+    // Camera follows player
+    cameraX = Math.max(0, Math.min(player.x - 200, levelWidth - logicalWidth));
 
     draw();
     requestAnimationFrame(update);
 }
 
-// ================== COLLISION ==================
-function collide(a, b) {
-    return (
-        a.x < b.x + b.width &&
-        a.x + a.width > b.x &&
-        a.y < b.y + b.height &&
-        a.y + a.height > b.y
-    );
-}
+// --- Drawing ---
+function drawPlayer() {
+    let currentSprite;
+    const runSpeed = 8, jumpSpeed = 20;
 
-// ================== DRAW ==================
-function draw() {
-    ctx.clearRect(0, 0, VIEW_WIDTH, VIEW_HEIGHT);
+    if (player.isCrouching) currentSprite = crouchFrames[0];
+    else if (!player.onGround) {
+        jumpTimer++;
+        if (jumpTimer >= jumpSpeed) { jumpTimer=0; jumpIndex=(jumpIndex+1)%jumpFrames.length; }
+        currentSprite = jumpFrames[jumpIndex];
+    } else if (player.velX !==0) {
+        runTimer++;
+        if (runTimer >= runSpeed) { runTimer=0; runIndex=(runIndex+1)%runFrames.length; }
+        currentSprite = runFrames[runIndex];
+    } else {
+        idleTimer++;
+        if (idleTimer >= 30) { idleTimer=0; idleIndex=(idleIndex+1)%idleFrames.length; }
+        currentSprite = idleFrames[idleIndex];
+    }
+
+    if (!currentSprite.complete) return;
 
     ctx.save();
-    ctx.translate(-cameraX, 0);
+    const drawX = player.x - cameraX;
+    const drawY = player.y;
 
-    ctx.fillStyle = "#2e8b57";
-    platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
-
-    ctx.fillStyle = "#777"; // walls
-    walls.forEach(w => ctx.fillRect(w.x, w.y, w.width, w.height));
-
-    ctx.fillStyle = "#ff8800";
-    spikes.forEach(s => ctx.fillRect(s.x, s.y, s.width, s.height));
-
-    ctx.fillStyle = "#ff0000";
-    enemies.forEach(e => ctx.fillRect(e.x, e.y, e.width, e.height));
-
-    ctx.fillStyle = "#000";
-    ctx.fillRect(finishBlock.x, finishBlock.y, finishBlock.width, finishBlock.height);
-
-    ctx.fillStyle = "#0000ff";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
+    if (!player.facingRight) {
+        ctx.translate(drawX + player.width, drawY);
+        ctx.scale(-1,1);
+        ctx.drawImage(currentSprite,0,0,player.width,player.height);
+    } else ctx.drawImage(currentSprite, drawX, drawY, player.width, player.height);
 
     ctx.restore();
 }
 
-// ================== START ==================
+function draw() {
+    ctx.clearRect(0,0,logicalWidth,logicalHeight);
+
+    // Platforms
+    ctx.fillStyle = "#2e8b57";
+    platforms.forEach(p => ctx.fillRect(p.x - cameraX, p.y, p.width, p.height));
+
+    // Spikes
+    ctx.fillStyle = "red";
+    spikes.forEach(s => ctx.fillRect(s.x - cameraX, s.y, s.width, s.height));
+
+    // Walls
+    ctx.fillStyle = "gray";
+    walls.forEach(w => ctx.fillRect(w.x - cameraX, w.y, w.width, w.height));
+
+    // Enemies
+    ctx.fillStyle = "red";
+    enemies.forEach(e => ctx.fillRect(e.x - cameraX, e.y, e.width, e.height));
+
+    // Finish block
+    ctx.fillStyle = "black";
+    finishBlock.y = finishBlock.baseY + Math.sin(Date.now()/300)*10; // slight vertical movement
+    ctx.fillRect(finishBlock.x - cameraX, finishBlock.y, finishBlock.width, finishBlock.height);
+
+    drawPlayer();
+}
+
+// --- START ---
 function startGame() {
     generateLevel();
     gameStarted = true;
@@ -249,6 +252,6 @@ function startGame() {
 
 document.getElementById("playButton").addEventListener("click", () => {
     document.getElementById("introScreen").style.display = "none";
-    canvas.style.display = "block";
+    document.getElementById("gameCanvas").style.display = "block";
     startGame();
 });
