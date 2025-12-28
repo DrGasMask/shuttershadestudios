@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sqish's Home</title>
+  <link rel="icon" type="image/png" href="/favicon.png">
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #8fbc8f;
+      color: black;
+    }
+
+    /* ===== SSS HEADER ===== */
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      background-color: #2a7f2a;
+      color: white;
+      text-align: center;
+      padding: 20px;
+      z-index: 1000;
+    }
+
+    header nav ul {
+      list-style: none;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      padding: 0;
+      margin: 10px 0 0;
+    }
+
+    header nav ul li a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .page-content {
+      padding-top: 140px;
+      max-width: 1100px;
+      margin: auto;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+      margin-bottom: 40px;
+    }
+
+    .grid img {
+      width: 100%;
+      border: 2px solid black;
+    }
+
+    h2 {
+      margin-top: 0;
+    }
+
+    .lower-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 30px;
+      align-items: start;
+    }
+
+    .shelf {
+      background-color: #c19a6b;
+      padding: 20px;
+      border: 3px solid #6b4f2a;
+      text-align: center;
+    }
+
+    .shelf div {
+      background-color: #eee;
+      margin: 10px;
+      padding: 15px;
+      border: 1px solid #555;
+      display: inline-block;
+    }
+
+    footer {
+      background-color: #2a7f2a;
+      color: white;
+      text-align: center;
+      padding: 10px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+
+<body>
+
+<header>
+  <h1>Shutter Shade Studios</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="maps.html">Maps</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="members.html">Our Members</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="page-content">
+
+  <!-- UPPER SECTION -->
+  <div class="grid">
+    <img src="images/sqish-home-main.png" alt="Sqish's Home">
+
+    <div>
+      <h2>Sqish's Home</h2>
+      <p>
+        Sqish's Home is a classic Roblox experience showcasing early blocky
+        design, simple geometry, and charming nostalgia. The house sits beneath
+        a bright blue sky, surrounded by vibrant green terrain and unmistakable
+        early-2000s Roblox vibes.
+      </p>
+    </div>
+  </div>
+
+  <!-- LOWER SECTION -->
+  <div class="lower-grid">
+
+    <div>
+      <h2>Easter Eggs</h2>
+      <p>
+        The map contains several hidden references and collectible-style items
+        scattered throughout the environment, rewarding curious players who
+        explore every corner.
+      </p>
+    </div>
+
+    <div class="shelf">
+      <div>Item</div>
+      <div>Box</div>
+      <div>Book</div>
+      <div>Artifact</div>
+    </div>
+
+    <div>
+      <h2>Other Images</h2>
+      <img src="images/sqish-home-topdown.png" alt="Top-down view">
+    </div>
+
+  </div>
+
+</div>
+
+<footer>
+  <p>Shutter Shade Studios - Footer</p>
+</footer>
+
+</body>
+</html>
