@@ -1,0 +1,13 @@
+body {
+    display: flex; justify-content: center; align-items: center;
+    height: 100vh; margin: 0; background-color: #4A752C; font-family: Arial;
+}
+.game-container { text-align: center; }
+.score-board {
+    background-color: #4A752C; color: white; font-size: 24px;
+    padding: 10px; display: flex; justify-content: space-between;
+}
+canvas {
+    background-color: #A2D149; border: 5px solid #578A34;
+    border-radius: 8px; box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+}

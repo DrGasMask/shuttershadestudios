@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Snake - Shutter Shade Studios</title>
+<link rel="icon" type="image/png" href="/favicon.png">
+<style>
+  /* ===== Body & Layout ===== */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #e6f5e6;
+    color: #333;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+
+  /* ===== Header ===== */
+  header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: #2a7f2a;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    z-index: 1000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  }
+  header nav ul {
+    list-style: none;
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 10px 0 0 0;
+    padding: 0;
+  }
+  header nav ul li a {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  header nav ul li a:hover {
+    text-decoration: underline;
+  }
+
+  /* ===== Page Content ===== */
+  .page-content {
+    padding-top: 140px; /* matches war sim offset */
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 40px;
+  }
+
+  /* ===== Game Wrapper ===== */
+  .game-wrapper {
+    background-color: #4A752C;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    text-align: center;
+  }
+
+  .game-stats {
+    color: white;
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-around;
+  }
+
+  canvas {
+    background-color: #A2D149;
+    border: 5px solid #2a7f2a;
+    border-radius: 5px;
+    max-width: 90vw;
+    max-height: 70vh;
+  }
+
+  /* ===== Footer ===== */
+  footer {
+    background-color: #2a7f2a;
+    color: white;
+    text-align: center;
+    padding: 15px;
+    margin-top: auto;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Shutter Shade Studios</h1>
+  <nav>
+    <ul>
+      <li><a href="index.html">Home</a></li>
+      <li><a href="members.html">Our Members</a></li>
+      <li><a href="games.html">Games</a></li>
+      <li><a href="films.html">Films & Shows</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="contact.html">Where to Find Us</a></li>
+    </ul>
+  </nav>
+</header>
+
+<div class="page-content">
+  <div class="game-wrapper">
+    <div class="game-stats">
+        <span>Score: <span id="score">0</span></span>
+        <span style="margin-left: 20px;">Best: <span id="high-score">0</span></span>
+    </div>
+    <canvas id="snakeGame" width="400" height="400"></canvas>
+    <p style="color: white; margin-top: 10px; font-size: 14px;">Use Arrow Keys to Move • Input Buffering Active</p>
+  </div>
+</div>
+
+<footer>
+  <p>Shutter Shade Studios - Footer</p>
+</footer>
+
+<script>
+  const canvas = document.getElementById("snakeGame");
+  const ctx = canvas.getContext("2d");
+  const box = 20; 
+  let score = 0;
+  let highScore = localStorage.getItem("snake-highscore") || 0;
+  document.getElementById("high-score").innerText = highScore;
+
+  let snake = [{x: 9 * box, y: 10 * box}];
+  let food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+  
+  let currentDir = "RIGHT";
+  let inputQueue = []; // Buffer to store key presses
+
+  // Input Control with Buffering
+  document.addEventListener("keydown", (e) => {
+    const key = e.key;
+    const lastQueued = inputQueue.length > 0 ? inputQueue[inputQueue.length - 1] : currentDir;
+
+    if(key == "ArrowLeft" && lastQueued != "RIGHT") inputQueue.push("LEFT");
+    else if(key == "ArrowUp" && lastQueued != "DOWN") inputQueue.push("UP");
+    else if(key == "ArrowRight" && lastQueued != "LEFT") inputQueue.push("RIGHT");
+    else if(key == "ArrowDown" && lastQueued != "UP") inputQueue.push("DOWN");
+  });
+
+  function collision(head, array) {
+    for(let i = 0; i < array.length; i++) {
+        if(head.x == array[i].x && head.y == array[i].y) return true;
+    }
+    return false;
+  }
+
+  function draw() {
+    // Draw Board
+    for(let i=0; i<20; i++) {
+        for(let j=0; j<20; j++) {
+            ctx.fillStyle = (i + j) % 2 == 0 ? "#A2D149" : "#AAD751";
+            ctx.fillRect(i*box, j*box, box, box);
+        }
+    }
+
+    // Process Input Buffer
+    if (inputQueue.length > 0) {
+        currentDir = inputQueue.shift();
+    }
+
+    // Move Snake Head
+    let snakeX = snake[0].x;
+    let snakeY = snake[0].y;
+
+    if(currentDir == "LEFT") snakeX -= box;
+    if(currentDir == "UP") snakeY -= box;
+    if(currentDir == "RIGHT") snakeX += box;
+    if(currentDir == "DOWN") snakeY += box;
+
+    let newHead = {x: snakeX, y: snakeY};
+
+    // Game Over Detection
+    if(snakeX < 0 || snakeX >= canvas.width || snakeY < 0 || snakeY >= canvas.height || collision(newHead, snake)) {
+        clearInterval(gameInterval);
+        alert("Game Over! Score: " + score);
+        location.reload();
+        return;
+    }
+
+    // Eating Food
+    if(snakeX == food.x && snakeY == food.y) {
+        score++;
+        document.getElementById("score").innerText = score;
+        if(score > highScore) {
+            highScore = score;
+            localStorage.setItem("snake-highscore", highScore);
+            document.getElementById("high-score").innerText = highScore;
+        }
+        food = { x: Math.floor(Math.random() * 20) * box, y: Math.floor(Math.random() * 20) * box };
+    } else {
+        snake.pop(); 
+    }
+
+    snake.unshift(newHead);
+
+    // Draw Snake & Food
+    snake.forEach((s, i) => {
+        ctx.fillStyle = i == 0 ? "#4E7CF6" : "#5283F3";
+        ctx.fillRect(s.x, s.y, box, box);
+    });
+    ctx.fillStyle = "#E7471D";
+    ctx.fillRect(food.x, food.y, box, box);
+  }
+
+  let gameInterval = setInterval(draw, 130); 
+</script>
+
+</body>
+</html>
