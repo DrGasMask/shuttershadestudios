@@ -13,7 +13,7 @@
       color: black;
     }
 
-    /* ===== Fixed SSS Header (MATCHES MAIN SITE) ===== */
+    /* ===== SSS HEADER (MATCHING MAIN SITE) ===== */
     header {
       position: fixed;
       top: 0;
@@ -46,14 +46,13 @@
       text-decoration: underline;
     }
 
-    /* Push content below header */
     .page-content {
       padding-top: 140px;
       max-width: 1100px;
       margin: auto;
     }
 
-    /* ===== Layout ===== */
+    /* ===== GRID LAYOUT ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -77,29 +76,54 @@
       align-items: start;
     }
 
-    /* Easter eggs image */
+    /* ===== EASTER EGGS IMAGE ===== */
     .easter-eggs-img {
       width: 100%;
       border: 2px solid black;
     }
 
+    /* ===== CAROUSEL ===== */
+    .carousel {
+      position: relative;
+      width: 100%;
+      border: 2px solid black;
+    }
+
+    .carousel-image {
+      width: 100%;
+      display: none;
+    }
+
+    .carousel-image.active {
+      display: block;
+    }
+
+    .carousel-dots {
+      text-align: center;
+      margin-top: 8px;
+    }
+
+    .dot {
+      height: 8px;
+      width: 8px;
+      margin: 0 4px;
+      background-color: white;
+      border-radius: 50%;
+      display: inline-block;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      background-color: black;
+    }
+
+    /* ===== FOOTER ===== */
     footer {
       background-color: #2a7f2a;
       color: white;
       text-align: center;
       padding: 10px;
       margin-top: 40px;
-    }
-
-    /* Responsive fallback */
-    @media (max-width: 900px) {
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .lower-grid {
-        grid-template-columns: 1fr;
-      }
     }
   </style>
 </head>
@@ -143,12 +167,11 @@
       <h2>Easter Eggs</h2>
       <p>
         Easter eggs are a very fun part of maps, from hidden lore to random scenery.
-        This map has the most. There are books in-game that have fully made front and
-        back covers, and of course, a spine. Look around for things and have a laugh!
+        This map has the most — books with fully made covers, spines, and hidden
+        details everywhere. Look around and have a laugh… maybe.
       </p>
     </div>
 
-    <!-- REPLACED ITEM BOX WITH IMAGE -->
     <div>
       <img
         src="images/eastereggs-sqish.png"
@@ -159,11 +182,18 @@
 
     <div>
       <h2>Other Images</h2>
-      <img
-        src="images/sqish-home-topdown.png"
-        alt="Top-down view of Sqish's Home"
-        style="width:100%; border:2px solid black;"
-      >
+
+      <div class="carousel">
+        <img class="carousel-image active" src="images/sqish-home-topdown.png" alt="Top-down view">
+        <img class="carousel-image" src="images/sqish-home-angle.png" alt="Angled view">
+        <img class="carousel-image" src="images/sqish-home-yard.png" alt="Yard view">
+
+        <div class="carousel-dots">
+          <span class="dot active"></span>
+          <span class="dot"></span>
+          <span class="dot"></span>
+        </div>
+      </div>
     </div>
 
   </div>
@@ -173,6 +203,30 @@
 <footer>
   <p>Shutter Shade Studios - Footer</p>
 </footer>
+
+<script>
+  const images = document.querySelectorAll(".carousel-image");
+  const dots = document.querySelectorAll(".dot");
+  let currentIndex = 0;
+
+  function showImage(index) {
+    images.forEach(img => img.classList.remove("active"));
+    dots.forEach(dot => dot.classList.remove("active"));
+
+    images[index].classList.add("active");
+    dots[index].classList.add("active");
+    currentIndex = index;
+  }
+
+  dots.forEach((dot, index) => {
+    dot.addEventListener("click", () => showImage(index));
+  });
+
+  setInterval(() => {
+    let next = (currentIndex + 1) % images.length;
+    showImage(next);
+  }, 4000);
+</script>
 
 </body>
 </html>
