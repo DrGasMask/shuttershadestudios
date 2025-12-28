@@ -13,16 +13,18 @@
       color: black;
     }
 
-    /* ===== SSS HEADER ===== */
+    /* ===== Fixed SSS Header (MATCHES MAIN SITE) ===== */
     header {
       position: fixed;
       top: 0;
+      left: 0;
       width: 100%;
       background-color: #2a7f2a;
       color: white;
       text-align: center;
       padding: 20px;
       z-index: 1000;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
     }
 
     header nav ul {
@@ -30,22 +32,28 @@
       display: flex;
       justify-content: center;
       gap: 20px;
+      margin: 10px 0 0 0;
       padding: 0;
-      margin: 10px 0 0;
     }
 
     header nav ul li a {
       color: white;
-      text-decoration: none;
       font-weight: bold;
+      text-decoration: none;
     }
 
+    header nav ul li a:hover {
+      text-decoration: underline;
+    }
+
+    /* Push content below header */
     .page-content {
       padding-top: 140px;
       max-width: 1100px;
       margin: auto;
     }
 
+    /* ===== Layout ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -69,7 +77,8 @@
       align-items: start;
     }
 
-    .lower-grid img {
+    /* Easter eggs image */
+    .easter-eggs-img {
       width: 100%;
       border: 2px solid black;
     }
@@ -80,6 +89,17 @@
       text-align: center;
       padding: 10px;
       margin-top: 40px;
+    }
+
+    /* Responsive fallback */
+    @media (max-width: 900px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .lower-grid {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -102,36 +122,48 @@
 
 <div class="page-content">
 
-  <!-- UPPER SECTION -->
+  <!-- ===== UPPER SECTION ===== -->
   <div class="grid">
     <img src="images/sqish-home-main.png" alt="Sqish's Home">
 
     <div>
       <h2>Sqish's Home</h2>
       <p>
-Sqish's Home is like the gm_construct of Classic Sandbox. It's 100% accurate when it comes to the place of where Sqish lives and it contains a lot. Very great map to play with your friends on when playing for the first time!
+        Sqish's Home is like the gm_construct of Classic Sandbox. It's 100% accurate
+        when it comes to the place of where Sqish lives and it contains a lot.
+        Very great map to play with your friends on when playing for the first time!
       </p>
     </div>
   </div>
 
-  <!-- LOWER SECTION -->
+  <!-- ===== LOWER SECTION ===== -->
   <div class="lower-grid">
 
     <div>
       <h2>Easter Eggs</h2>
       <p>
-Easter eggs are a very fun part of maps, from hidden lore to random scenery, this map, has the most. there are books ingame that have fully made front and back covers, and of course, a spine. look around for things, and have a laugh! maybe?...
+        Easter eggs are a very fun part of maps, from hidden lore to random scenery.
+        This map has the most. There are books in-game that have fully made front and
+        back covers, and of course, a spine. Look around for things and have a laugh!
       </p>
     </div>
 
-    <!-- REPLACED SHELF -->
+    <!-- REPLACED ITEM BOX WITH IMAGE -->
     <div>
-      <img src="images/eastereggs-sqish.png" alt="Easter Eggs">
+      <img
+        src="images/eastereggs-sqish.png"
+        alt="Sqish's Home Easter Eggs"
+        class="easter-eggs-img"
+      >
     </div>
 
     <div>
       <h2>Other Images</h2>
-      <img src="images/sqish-home-topdown.png" alt="Top-down view">
+      <img
+        src="images/sqish-home-topdown.png"
+        alt="Top-down view of Sqish's Home"
+        style="width:100%; border:2px solid black;"
+      >
     </div>
 
   </div>
