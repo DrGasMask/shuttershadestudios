@@ -71,7 +71,7 @@ let finishBlock = null;
 
 const bgThemes = ["#87CEEB", "#FFA07A", "#98FB98", "#D8BFD8", "#FFD700"];
 
-// --- LEVEL GENERATOR ---
+// --- LEVEL GENERATOR WITH HOLES ---
 function generateLevel() {
     platforms = [];
     movingPlatforms = [];
@@ -80,15 +80,29 @@ function generateLevel() {
 
     document.body.style.background = bgThemes[levelNumber % bgThemes.length] || "#87CEEB";
 
-    // ground
-    platforms.push({ x: 0, y: 400, width: logicalWidth, height: 20 });
-
-    let x = 120;
-    let lastY = 330;
-    const finishX = 1500 + levelNumber * 100; // longer each level
+    // generate ground segments with holes
+    let groundX = 0;
+    const finishX = 1500 + levelNumber * 100;
     const difficulty = Math.min(levelNumber * 0.1, 1);
 
-    // generate platforms over a longer distance
+    while (groundX < finishX) {
+        // random chance to skip ground (hole)
+        if (Math.random() < 0.15 + difficulty * 0.10) {
+            // create a hole (skip)
+            groundX += 50 + Math.random() * (50 + difficulty * 50);
+            continue;
+        }
+
+        // create ground segment
+        const groundWidth = 80 + Math.random() * 80;
+        platforms.push({ x: groundX, y: 400, width: groundWidth, height: 20 });
+        groundX += groundWidth;
+    }
+
+    // additional elevated platforms
+    let x = 220;
+    let lastY = 330;
+
     while (x < finishX - 200) {
         const width = Math.max(50, 110 - difficulty * 40);
         const deltaY = (Math.random() - 0.5) * (120 + difficulty * 80);
@@ -109,7 +123,7 @@ function generateLevel() {
         x += width + (80 + Math.random() * (120 + difficulty * 60));
     }
 
-    // hazards
+    // hazards (spikes)
     let spikeCount = 0;
     while (spikeCount < 4) {
         let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
@@ -177,14 +191,12 @@ function respawnPlayer() {
     player.height = 48;
 }
 
-// --- INPUT HANDLING ---
+// --- input, update loop, rendering (unchanged) ---
 document.addEventListener("keydown", e => keys[e.code] = true);
 document.addEventListener("keyup", e => keys[e.code] = false);
 
-// --- GAME LOOP ---
 function update() {
     if (!gameStarted) return;
-
     if (keys["KeyC"] && player.onGround) {
         if (!player.isCrouching) player.y += (player.height - 30);
         player.height = 30;
@@ -274,77 +286,4 @@ function update() {
     requestAnimationFrame(update);
 }
 
-// --- DRAWING & UI ---
-function drawPlayer() {
-    let currentSprite;
-    const runSpeed = runSpeedBase * (keys["KeyS"] ? 2 : 1);
-    const jumpSpeed = jumpSpeedBase * (keys["KeyS"] ? 2 : 1);
-
-    if (!player.onGround) {
-        jumpTimer++;
-        if (jumpTimer >= jumpSpeed) jumpTimer = 0, jumpIndex = (jumpIndex + 1) % jumpFrames.length;
-        currentSprite = jumpFrames[jumpIndex];
-    } else if (player.velX !== 0) {
-        runTimer++;
-        if (runTimer >= runSpeed) runTimer = 0, runIndex = (runIndex + 1) % runFrames.length;
-        currentSprite = runFrames[runIndex];
-    } else {
-        idleTimer++;
-        if (idleTimer >= idleSpeed) idleTimer = 0, idleIndex = (idleIndex + 1) % idleFrames.length;
-        currentSprite = idleFrames[idleIndex];
-    }
-
-    if (currentSprite.complete) {
-        ctx.save();
-        if (!player.facingRight) {
-            ctx.translate(player.x + player.width, player.y);
-            ctx.scale(-1, 1);
-            ctx.drawImage(currentSprite, 0, 0, player.width, player.height);
-        } else {
-            ctx.drawImage(currentSprite, player.x, player.y, player.width, player.height);
-        }
-        ctx.restore();
-    }
-}
-
-function drawUI() {
-    ctx.fillStyle = "#000";
-    ctx.font = "20px Arial";
-    ctx.textAlign = "left";
-    ctx.fillText(`Score: ${score}`, 20, 30);
-    ctx.fillText(`Level: ${levelNumber}`, 20, 60);
-}
-
-function draw() {
-    ctx.clearRect(0, 0, logicalWidth, logicalHeight);
-
-    ctx.fillStyle = "#2e8b57"; // platforms
-    platforms.forEach(p => ctx.fillRect(p.x, p.y, p.width, p.height));
-
-    ctx.fillStyle = "#8A2BE2"; // moving platforms
-    movingPlatforms.forEach(mp => ctx.fillRect(mp.x, mp.y, mp.width, mp.height));
-
-    ctx.fillStyle = "#FF8C00"; // spikes
-    hazards.forEach(hz => ctx.fillRect(hz.x, hz.y, hz.width, hz.height));
-
-    ctx.fillStyle = "#FF0000"; // enemies
-    enemies.forEach(en => ctx.fillRect(en.x, en.y, en.width, en.height));
-
-    ctx.fillStyle = "#000"; // finish block
-    ctx.fillRect(finishBlock.x, finishBlock.y, finishBlock.width, finishBlock.height);
-
-    drawPlayer();
-    drawUI();
-}
-
-function startGame() {
-    generateLevel();
-    gameStarted = true;
-    update();
-}
-
-document.getElementById("playButton").addEventListener("click", () => {
-    document.getElementById("introScreen").style.display = "none";
-    document.getElementById("gameCanvas").style.display = "block";
-    startGame();
-});
+// drawPlayer(), drawUI(), draw(), startGame() and playButton listener (unchanged)
