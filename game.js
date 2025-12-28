@@ -80,36 +80,38 @@ function generateLevel() {
 
     document.body.style.background = bgThemes[levelNumber % bgThemes.length] || "#87CEEB";
 
+    // ground
     platforms.push({ x: 0, y: 400, width: logicalWidth, height: 20 });
 
     let x = 120;
     let lastY = 330;
-    const finishX = 700;
+    const finishX = 1500 + levelNumber * 100; // longer each level
     const difficulty = Math.min(levelNumber * 0.1, 1);
 
-    while (x < finishX - 120) {
-        const width = Math.max(40, 100 - difficulty * 40);
-        const deltaY = (Math.random() - 0.5) * (100 + difficulty * 50);
+    // generate platforms over a longer distance
+    while (x < finishX - 200) {
+        const width = Math.max(50, 110 - difficulty * 40);
+        const deltaY = (Math.random() - 0.5) * (120 + difficulty * 80);
         const newY = Math.min(Math.max(lastY + deltaY, 200), 380);
 
         const platform = { x: x, y: newY, width: width, height: 15 };
 
-        if (Math.random() < 0.2 + difficulty * 0.1) {
+        if (Math.random() < 0.25 + difficulty * 0.15) {
             platform.isMoving = true;
             platform.dir = Math.random() < 0.5 ? 1 : -1;
-            platform.speed = 1.5 + difficulty * 0.5;
+            platform.speed = 1.5 + difficulty * 0.7;
             movingPlatforms.push(platform);
         } else {
             platforms.push(platform);
         }
 
         lastY = newY;
-        x += width + (40 + Math.random() * (70 + difficulty * 50));
+        x += width + (80 + Math.random() * (120 + difficulty * 60));
     }
 
-    // place guaranteed spikes (hazards)
+    // hazards
     let spikeCount = 0;
-    while (spikeCount < 3) {
+    while (spikeCount < 4) {
         let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
         let p = platforms[idx];
         if (p) {
@@ -122,7 +124,8 @@ function generateLevel() {
             spikeCount++;
         }
     }
-    if (Math.random() < 0.6) {
+
+    if (Math.random() < 0.7) {
         let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
         let p = platforms[idx];
         if (p) hazards.push({
@@ -133,7 +136,7 @@ function generateLevel() {
         });
     }
 
-    // guaranteed enemy
+    // enemies
     let enemyPlaced = false;
     while (!enemyPlaced) {
         let idx = Math.floor(Math.random() * (platforms.length - 1)) + 1;
@@ -151,6 +154,7 @@ function generateLevel() {
         }
     }
 
+    // finish
     finishBlock = {
         x: finishX,
         y: lastY - player.height - 10,
@@ -181,7 +185,6 @@ document.addEventListener("keyup", e => keys[e.code] = false);
 function update() {
     if (!gameStarted) return;
 
-    // crouch correctly (adjust hitbox without falling through platforms)
     if (keys["KeyC"] && player.onGround) {
         if (!player.isCrouching) player.y += (player.height - 30);
         player.height = 30;
@@ -264,7 +267,7 @@ function update() {
         player.y + player.height > finishBlock.y
     ) {
         score++;
-        generateLevel(); // endless next level
+        generateLevel();
     }
 
     draw();
