@@ -3,31 +3,75 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Leave</title>
+  <title>I KNOW YOU</title>
   <link rel="icon" type="image/png" href="/favicon.png">
   <style>
-    /* Full-screen black background */
     body {
       margin: 0;
       padding: 0;
       background-color: black;
       color: white;
+      font-family: 'Courier New', monospace;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
-      height: 100vh;
-      font-family: Arial, sans-serif;
-      font-size: 4rem;
+      min-height: 100vh;
       text-align: center;
     }
 
-    /* Optional: make the text unselectable */
-    body * {
-      user-select: none;
+    /* Grid for images */
+    .image-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 200px);
+      grid-template-rows: repeat(2, 200px);
+      gap: 20px;
+      margin-bottom: 50px;
+    }
+
+    .image-grid img {
+      width: 200px;
+      height: 200px;
+      object-fit: cover;
+      border: 2px solid white;
+      transition: transform 0.3s;
+    }
+
+    .image-grid img:hover {
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    /* ARG-style clickable text */
+    .arg-text {
+      font-size: 3rem;
+      color: red;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: color 0.3s;
+    }
+
+    .arg-text:hover {
+      color: #ff5555;
+    }
+
+    .arrow {
+      font-size: 2rem;
     }
   </style>
 </head>
 <body>
-  A tribute to ShutterShade Studios from Huddersfield, United Kingdom. (we're a diff sss tho)
+  <div class="image-grid">
+    <img src="images/image1.jpg" alt="Mysterious Image 1">
+    <img src="images/image2.jpg" alt="Mysterious Image 2">
+    <img src="images/image3.jpg" alt="Mysterious Image 3">
+    <img src="images/image4.jpg" alt="Mysterious Image 4">
+  </div>
+
+  <div class="arg-text" onclick="window.location.href='https://www.youtube.com/watch?v=dQw4w9WgXcQ'">
+    I KNOW YOU <span class="arrow">--></span>
+  </div>
 </body>
 </html>
